@@ -1,0 +1,41 @@
+{% extends "design/base.html" %}
+{% block content %}
+  {% include "tags/tag_form_name.html" %}
+  {% include "tags/tag_form_image.html" %}
+  <div id="ajax-data" style="display: none;"></div>
+{% endblock content %}
+{% block js %}
+  <script src="{{STATIC_URL}}js/bootbox.min.js"></script>
+  <script type="text/javascript">
+    function saveDataInCache(data){
+      $('#ajax-data').replaceWith('<div id="ajax-data" style="display: none;"></div>');   // Clear temp data cache
+      return $('#ajax-data').append(data);                                               // Add new data to cache
+    }
+    function updateMessages(data){
+      $('.message:visible').remove();
+      $('.message', d).appendTo($('#messages'));
+    }
+    function updateTagName(data, result){
+      d=saveDataInCache(data);
+      updateMessages(d);
+      $('#tag_name').html($('#id_name').val());
+    }
+    $(document).on("click", "#renameTagModal", function(e) {
+      bootbox.prompt({
+        title: "Choose a name for this tag.",
+        value: $('#tag_name').html(),
+        callback: function(result) {
+          if (result != null) {
+            $('#tag_name').html(result);
+            $('#id_name').val(result);
+            $.post({
+              url: "{% url "update_tag_name" tag.pk %}",
+              data:{name: result},
+              success: updateName
+            });
+          }
+        }
+      });
+    });
+  </script>
+{% endblock js %}

@@ -1,0 +1,21 @@
+{% extends "design/base.html" %}
+{% block content %}
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2 page-header">
+			<h1>My Registered Tags</h1>
+		</div>
+	</div>
+	{% for tag in object_list %}
+		<div class="row">
+			<div class="col-md-3 col-md-offset-3">
+				<img src="{{tag.image.url_200x150}}">
+			</div>
+			<div class="tag-list-name col-md-3">
+				<a class="lead" href="{% url "show_tag" tag.pk %}">{{tag}}</a>
+			</div>
+		</div>
+	{% endfor %}
+{% endblock content %}
+{% block blockname %}
+	<li class="active"><a href="#">Back to Home</a></li>
+{% endblock blockname %}

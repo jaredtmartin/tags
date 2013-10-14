@@ -1,0 +1,9 @@
+<ul id="messages" class="messages">
+  {% block messages %}{% endblock %}
+  {% for message in messages %}
+    <li id="message-{{message.id}}" class="message {% if message.tags %}alert-{{ message.tags }}{% endif %} alert">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      {{ message }}
+    </li>
+  {% endfor %}
+</ul>
