@@ -439,7 +439,7 @@ body {
   background-color: #ffffff;
 }
 a {
-  color: #16a085;
+  color: #2c3e50;
   text-decoration: none;
   -webkit-transition: 0.25s;
   -moz-transition: 0.25s;
@@ -449,7 +449,7 @@ a {
 }
 a:hover,
 a:focus {
-  color: #1abc9c;
+  color: #f1c40f;
   text-decoration: none;
 }
 .img-rounded {
@@ -2292,7 +2292,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 .checkbox.checked,
 .radio.checked {
-  color: #16a085;
+  color: #2c3e50;
 }
 .checkbox.checked .first-icon,
 .radio.checked .first-icon {
@@ -2303,7 +2303,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 .radio.checked .second-icon {
   opacity: 1;
   filter: alpha(opacity=100);
-  color: #16a085;
+  color: #2c3e50;
   -webkit-transition: color 0.25s linear;
   -moz-transition: color 0.25s linear;
   -o-transition: color 0.25s linear;
@@ -2350,7 +2350,7 @@ textarea.input-group-sm > .input-group-btn > .btn {
 }
 .checkbox.primary.checked,
 .radio.primary.checked {
-  color: #16a085;
+  color: #2c3e50;
 }
 .checkbox.primary.checked .icons,
 .radio.primary.checked .icons {
@@ -4026,7 +4026,7 @@ a.list-group-item.active > .badge,
   border-color: #e0eaeb;
 }
 .alert-success a {
-  color: #16a085;
+  color: #2c3e50;
 }
 .alert-info {
   background-color: #f7f9fa;

@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+from django.conf.urls.defaults import patterns, include, url
 from tags.views import ListTags, EditTag, TagNameAjax, TagImageAjax
 
 #  For this project view and url names will follow verb_noun naming pattern.

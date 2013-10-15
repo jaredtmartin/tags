@@ -1,0 +1,43 @@
+@import "variables";
+#waist{
+	min-height: 450px;
+}
+
+.hiddenfile {
+ width: 0px;
+ height: 0px;
+ overflow: hidden;
+}
+.navbar.navbar-thin .nav > li > a {
+	padding: 11px 20px;
+}
+.navbar.navbar-thin .navbar-brand {
+	padding: 0 17px;
+}
+.navbar.navbar-thin .navbar-inner {
+	background: @midnight-blue;
+}
+.navbar .nav > li > a {
+  color: white;
+
+  &:hover,
+  &:focus {
+    color: @sun-flower;
+    background-color: transparent;
+  }
+}
+.bottom-menu.yes-footer {
+  background: @midnight-blue;
+  color: white;
+  a {
+    color: inherit;
+    .active &,
+    &:hover,
+    &:focus {
+      color: @sun-flower;
+    }
+  }
+}
+.tag-list-name{
+  padding:60px 0;
+}
