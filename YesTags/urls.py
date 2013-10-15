@@ -13,6 +13,6 @@ urlpatterns = patterns('',
     url(r'^tags/', include('tags.urls')),
 )
 
-## This is used to serve user uploaded files in dev mode
-##if settings.DEBUG:
-##    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# This is used to serve user uploaded files in dev mode
+if settings.DEBUG:
+   urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

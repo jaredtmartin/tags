@@ -6,6 +6,10 @@
   height: 0px;
   overflow: hidden;
 }
+.navbar.navbar-thin .nav > li > a.navbar-brand {
+  padding: 0 20px;
+  float: none;
+}
 .navbar.navbar-thin .nav > li > a {
   padding: 11px 20px;
 }
