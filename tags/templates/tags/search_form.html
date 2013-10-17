@@ -6,12 +6,12 @@
     </div>
   </div>
   <form action="{% url "search" %}" method="post">{% csrf_token %}
-    <div class="row">
+    <div class="row input-row">
         <div class="col-md-6 col-md-offset-3">
           <input name="q" id="id_q" type="text" placeholder="Enter the code here:" class="form-control" />
         </div>
     </div>
-    <div class="row input-row">
+    <div class="row">
       <div class="col-md-6 col-md-offset-3">
         <input class="btn btn-primary pull-right" type="submit">
       </div>

@@ -7,5 +7,20 @@
         {{ message }}
       </div>
     {% endfor %}
+    {% if form.errors %}
+      <div class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        {% for error in form.non_field_errors %}
+          <li>{{error|striptags}}</li>
+        {% endfor %}
+        {% for field in form %} 
+          {% if field.errors %}
+          <li>{{ field.label }}: {{ field.errors|striptags }}</li>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
 </div>
+
+

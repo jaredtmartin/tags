@@ -20,7 +20,13 @@
       </p>
       <div class="row">
         <div class="col-md-12">
-          <a class="btn btn-primary" href="{% url "report_tag" object.pk %}">Report as Found!</a>
+          {% if user.is_authenticated %}
+            <form action="{% url "report" object.pk %}" method="post">{% csrf_token %}
+              <button class="btn btn-primary" type="submit">Report as Found!</button>
+            </form>
+          {% else %}
+            <a class="btn btn-primary" href="{% url "report" object.pk %}">Report as Found!</a>
+          {% endif %}
         </div>
       </div>
     </div>

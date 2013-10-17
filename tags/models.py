@@ -19,3 +19,8 @@ class Tag(models.Model):
       duplicates = Tag.objects.filter(code=code)
       if not duplicates: self.code = code
     super(Tag, self).save(*args, **kwargs)
+class Report(models.Model):
+  tag = models.ForeignKey(Tag) 
+  name = models.CharField(max_length=64)
+  email = models.CharField(max_length=64)
+  phone = models.CharField(max_length=64)

@@ -10,6 +10,6 @@ urlpatterns = patterns('',
     url(r'^(?P<pk>\d+)/$', ShowTag.as_view(), name='show_tag'),
     url(r'^(?P<pk>\d+)/name/$', TagNameAjax.as_view(), name='change_name'),
     url(r'^(?P<pk>\d+)/image/$', TagImageAjax.as_view(), name='change_image'),
-    url(r'^(?P<pk>\d+)/report/$', ReportTag.as_view(), name="report_tag"),
+    url(r'^(?P<pk>\d+)/report/$', ReportTag.as_view(), name="report"),
     url(r'^search/$', SearchTag.as_view(), name="search"),
    )
