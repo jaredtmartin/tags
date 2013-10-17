@@ -11,7 +11,7 @@
 				<img src="{{tag.image.url_200x150}}">
 			</div>
 			<div class="tag-list-name col-md-3">
-				<a class="lead" href="{% url "show_tag" tag.pk %}">{{tag}}</a>
+				<a class="lead" href="{% url "edit_tag" tag.pk %}">{{tag}}</a>
 			</div>
 		</div>
 	{% endfor %}

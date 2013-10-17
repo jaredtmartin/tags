@@ -9,3 +9,6 @@ class TagImageForm(forms.ModelForm):
   class Meta:
     model = Tag
     fields = ('image',)
+
+class SearchForm(forms.Form):
+  q = forms.CharField()

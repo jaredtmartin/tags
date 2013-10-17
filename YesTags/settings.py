@@ -20,7 +20,7 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
+AUTH_USER_MODEL = 'authentication.User'
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -121,6 +121,7 @@ INSTALLED_APPS = (
     'tags',
     'design',
     'thumbs',
+    'authentication',
 )
 LOGIN_URL='/accounts/login/'
 LOGIN_REDIRECT_URL = "/mytags/"

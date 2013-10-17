@@ -1,52 +1,63 @@
-from vanilla import ListView, DetailView, UpdateView
+import vanilla
 from tags.models import Tag
-from django.core.urlresolvers import reverse_lazy
-from tags.forms import TagNameForm, TagImageForm
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from tags.forms import TagNameForm, TagImageForm, SearchForm
 from django.contrib import messages
 
-class AjaxUpdateView(UpdateView):
+class MessageMixin(object):
   success_message = None
   error_message = None
   def get_error_message(self, form):return self.error_message
   def get_success_message(self, form):return self.success_message
   def form_valid(self, form):
-    # print "form Valid"
-    # print "self.request.POST = %s" % str(self.request.POST)
-    self.object = form.save()
-    context = self.get_context_data(form=form)
-
-    # Send message if appropriate
     msg=self.get_success_message(form)
     if msg: messages.success(self.request, msg)
-
-    return self.render_to_response(context)
+    return super(MessageMixin, self).form_valid(form)
 
   def form_invalid(self, form):
-    # print "Form Invalid"
-    # print "form.errors = %s" % str(form.errors)
-    # Send message if appropriate
     error_msg=self.get_error_message(form)
-    if error_msg: messages.success(self.request, error_msg)
-    return super(AjaxUpdateView, self).form_invalid(form)
+    if error_msg: messages.error(self.request, error_msg)
+    return super(MessageMixin, self).form_invalid(form)
+class UpdateView(MessageMixin, vanilla.UpdateView): pass
+class FormView(MessageMixin, vanilla.FormView): pass
+
 #  For this project view and url names will follow verb_noun naming pattern.
 
-class ListTags(ListView):
+class ListTags(vanilla.ListView):
     model = Tag
 
-class EditTag(UpdateView):
+class EditTag(vanilla.UpdateView):
   model = Tag
   # We only use the GET, POST is done via AJAX
   def post(self, request, *args, **kwargs):
     return self.get(request, *args, **kwargs)
 
-class TagNameAjax(AjaxUpdateView):
+class TagNameAjax(UpdateView):
   model = Tag
   form_class = TagNameForm
   template_name = "tags/tag_name.html"
   error_message = "There was an error updating the tag's name."
 
-class TagImageAjax(AjaxUpdateView):
+class TagImageAjax(UpdateView):
   model = Tag
   form_class = TagImageForm
   template_name = "tags/tag_image.html"
   error_message = "There was an error updating the tag's image."
+
+class ShowTag(vanilla.DetailView):
+  model = Tag
+
+class SearchTag(FormView):
+  form_class = SearchForm
+  template_name="tags/search_form.html"
+  def form_valid(self, form):
+    results = Tag.objects.filter(code=form.cleaned_data['q'])
+    if len(results)==1: 
+      return HttpResponseRedirect(reverse("show_tag", kwargs={"pk":results[0].pk}))
+    else: 
+      messages.error(self.request, "We were unable to find the tag you were searching for. Please try again.")
+      return self.form_invalid(form)
+
+class ReportTag(vanilla.TemplateView):
+  template_name="tags/report_contact_info.html"
