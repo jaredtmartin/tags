@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 
 class UserManager(BaseUserManager):
@@ -56,7 +56,7 @@ class User(AbstractBaseUser):
     def get_full_name(self):
         # The user is identified by their email address
         return "%s %s" % (self.first_name, self.last_name)
-
+    full_name = property(get_full_name)
     def get_short_name(self):
         # The user is identified by their email address
         return self.first_name

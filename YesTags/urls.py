@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     # url(r'^YesTags/', include('YesTags.foo.urls')),
 		url(r'^admin/', include(admin.site.urls)),
     url(r'^tags/', include('tags.urls')),
+    url(r'^auth/', include('authentication.urls')),
 )
 
 # This is used to serve user uploaded files in dev mode

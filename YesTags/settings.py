@@ -128,9 +128,11 @@ INSTALLED_APPS = (
     'design',
     'thumbs',
     'authentication',
+    'django_extensions',
 )
-LOGIN_URL='/accounts/login/'
-LOGIN_REDIRECT_URL = "/mytags/"
+INTERNAL_IPS = ('127.0.0.1',)
+LOGIN_URL='/auth/login/'
+LOGIN_REDIRECT_URL = "/tags/"
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.

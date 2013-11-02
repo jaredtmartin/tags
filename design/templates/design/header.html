@@ -1,22 +1,38 @@
-<div class="row">
-  <div class="col-md-10 col-md-offset-1">
-    <div class="navbar navbar-thin">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target="#nav-collapse-01"></button>
-          <div class="nav-collapse collapse in" id="nav-collapse-01">
-            <ul class="nav">
-              <li><a href="{% url "list_tags" %}">Back to My Tags</a></li>
-              <li class="logo-cell"><a href="#fakelink" class="navbar-brand"><img src="{{STATIC_URL}}img/YesTagsLogo.gif"></a></li>
-              <li><a href="#">Store</a></li>
-              <li><a href="#">How it Works</a></li>
-              <li><a href=" {% url "search" %} ">Search</a></li>
-              <li><a href="#">Register a Tag</a></li>
-              <li><a href="#">Login / Signup</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
+{% extends "design/base.html" %}
+{% block header %}
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1">
+      <div class="navbar navbar-thin">
+        <div class="navbar-inner">
+          <div class="container">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target="#nav-collapse-01"></button>
+            <div class="nav-collapse collapse in" id="nav-collapse-01">
+              <ul class="nav">
+                <li class="logo-cell"><a href="#fakelink" class="navbar-brand"><img src="{{STATIC_URL}}img/YesTagsLogo.gif"></a></li>
+                <li><a href="#">Store</a></li>
+                <li><a href="#">How it Works</a></li>
+                {% if user.is_authenticated %} 
+                  <li><a href="{% url "list_tags" %}">My Tags</a></li>
+                {% endif %}
+                <li><a href=" {% url "search" %} ">Search</a></li>
+                <li><a href="#">Register a Tag</a></li>
+                {% if user.is_authenticated %}
+                  <li>
+                    <a href="#">Welcome, {{user.full_name}}</a>
+                    <ul>
+                      <li><a href="#">Change Password</a></li>
+                      <li><a href="{% url "user_profile" %}">Profile</a></li>
+                      <li><a href="{% url "logout" %}">Logout</a></li>
+                    </ul>
+                  </li>
+                {% else %}
+                  <li><a href="{% url "login" %}">Login / Signup</a></li>
+                {% endif %}
+              </ul>
+            </div><!--/.nav-collapse -->
+          </div>
         </div>
-      </div>
-    </div> <!-- /navbar -->
+      </div> <!-- /navbar -->
+    </div>
   </div>
-</div>
+{% endblock header %}

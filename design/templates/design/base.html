@@ -22,12 +22,14 @@
     <![endif]-->
   </head>
   <body>
-      {% include "design/header.html" %}
+      {% block header %}{% endblock %}
       {% include "design/messages.html" %}
     <div id="waist" class="container">
+      {% block base %}
       {% block content %}
       	
       {% endblock content %}
+      {% endblock base %}
     </div>
       {% include "design/footer.html" %}
     <!-- /.container -->

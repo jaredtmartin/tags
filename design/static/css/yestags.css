@@ -6,6 +6,10 @@ ul {
   border-color: #EED3D7;
   color: #B94A48;
 }
+h1.page-title {
+  margin-top: 0;
+  border-bottom: 1px solid #E7E9EC;
+}
 #waist {
   min-height: 450px;
 }
