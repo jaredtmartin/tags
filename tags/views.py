@@ -9,6 +9,14 @@ from django.core.mail import send_mail
 from django.contrib.sites.models import Site
 from django.template import Context, loader
 from django.utils.http import int_to_base36
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
+class LoginRequiredMixin(object):
+  u"""Ensures that user must be authenticated in order to access view."""
+  @method_decorator(login_required)
+  def dispatch(self, *args, **kwargs):
+    return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
 
 class ExtraContextMixin(object):
   extra_context = {}
@@ -57,22 +65,22 @@ class FormView(MessageMixin, vanilla.FormView): pass
 
 #  For this project view and url names will follow verb_noun naming pattern.
 
-class ListTags(vanilla.ListView):
+class ListTags(LoginRequiredMixin, vanilla.ListView):
     model = Tag
 
-class EditTag(vanilla.UpdateView):
+class EditTag(LoginRequiredMixin, vanilla.UpdateView):
   model = Tag
   # We only use the GET, POST is done via AJAX
   def post(self, request, *args, **kwargs):
     return self.get(request, *args, **kwargs)
 
-class TagNameAjax(UpdateView):
+class TagNameAjax(LoginRequiredMixin, UpdateView):
   model = Tag
   form_class = TagNameForm
   template_name = "tags/tag_name.html"
   error_message = "There was an error updating the tag's name."
 
-class TagImageAjax(UpdateView):
+class TagImageAjax(LoginRequiredMixin, UpdateView):
   model = Tag
   form_class = TagImageForm
   template_name = "tags/tag_image.html"

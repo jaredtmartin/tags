@@ -6,6 +6,10 @@ ul {
   border-color: #EED3D7;
   color: #B94A48;
 }
+.tag-code {
+  font-weight: 200;
+  font-size: 21px;
+}
 h1.page-title {
   margin-top: 0;
   border-bottom: 1px solid #E7E9EC;
