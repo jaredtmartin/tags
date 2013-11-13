@@ -1,5 +1,5 @@
 from django import forms
-from tags.models import Tag
+from tags.models import Tag, Code
 class TagNameForm(forms.ModelForm):
   class Meta:
     model = Tag
@@ -12,6 +12,14 @@ class TagImageForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
   q = forms.CharField()
+
+class RegisterCodeForm(forms.Form):
+  code = forms.CharField()
+  def clean_code(self):
+    data = self.cleaned_data['code']
+    try: return Code.objects.get(code=self.cleaned_data['code'])
+    except Code.DoesNotExist: raise forms.ValidationError("This is not a valid code.")
+    return data
 
 class ReportContactForm(forms.Form):
   name = forms.CharField()

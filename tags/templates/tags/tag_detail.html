@@ -7,7 +7,7 @@
   </div>
   <div class="row" id="image-section">
     <div class="col-md-4 col-md-offset-2">
-      <img id="tag-image" src="{{object.image.url_300x250}}">
+      <img id="tag-image" src="{% if object.image %}{{object.image.url_300x250}}{% else %}{{STATIC_URL}}img/big-sample.gif{% endif %}">
     </div>
     <div class="col-md-4">
       <p class="row">

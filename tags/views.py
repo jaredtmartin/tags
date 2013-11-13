@@ -3,7 +3,7 @@ from django.conf import settings
 from tags.models import Tag
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from tags.forms import TagNameForm, TagImageForm, SearchForm, ReportContactForm
+from tags.forms import TagNameForm, TagImageForm, SearchForm, ReportContactForm, RegisterCodeForm
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
@@ -194,3 +194,16 @@ class ReportTag(EmailMixin, UpdateView):
     )
     messages.success(self.request, self.success_message)
     return HttpResponseRedirect(reverse("search"))
+
+class RegisterTag(FormView):
+  form_class = RegisterCodeForm
+  template_name = "tags/tag_register_form.html"
+  success_message = "Your new tag has been registered successfully."
+  def form_valid(self, form):
+    code = form.cleaned_data['code']
+    tag = Tag.objects.create(owner=self.request.user, code=code, name="New Tag")
+    code.delete()
+    messages.success(self.request, self.success_message)
+    return HttpResponseRedirect(reverse('edit_tag', kwargs={'pk':tag.pk}))
+
+    

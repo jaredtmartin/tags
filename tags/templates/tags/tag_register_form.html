@@ -1,0 +1,24 @@
+{% extends "design/header.html" %}
+{% block content %}
+  <div class="row" id="name-section">
+    <div class="col-md-6 col-md-offset-3 page-header">
+      <h1>Register a new Tag</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <p class="lead">Please enter the code found on your new tag.</p>
+    </div>
+  </div>
+  <form action="{% url "register" %}" method="post">{% csrf_token %}
+    <div class="row input-row">
+      <div class="col-md-5 col-md-offset-3">
+        {{form.code.errors}}
+        <input id="id_code" type="text" name="code" placeholder="Code" class="form-control" value={{form.code.value|default:""}}>
+      </div>
+      <div class="col-md-1">
+        <input class="btn btn-primary pull-right" type="submit" value="Register">
+      </div>
+    </div>
+  </form>
+{% endblock content %}
