@@ -60,13 +60,40 @@ class MessageMixin(object):
     if error_msg: messages.error(self.request, error_msg)
     print "form.errors = %s" % str(form.errors)
     return super(MessageMixin, self).form_invalid(form)
+
+class FilterMixin(object):
+  filter_on = []
+  def filter(self, queryset):
+    # Takes a queryset and returns the queryset filtered
+    # If you want to do a custom filter for a certain field,
+    # Declare a function: filter_{{fieldname}} that takes a queryset and the value, 
+    # does the filter and returns the queryset
+    for f in self.filter_on:
+      if hasattr(self,'filter_'+f): queryset = getattr(self,'filter_'+f)(queryset, self.request.GET.getlist(f,[]))
+      elif f in self.request.GET: queryset = queryset.filter(**{f:self.request.GET[f]})
+    return queryset
+  def get_queryset(self):
+    queryset = super(FilterMixin, self).get_queryset()
+    if self.filter_on: queryset = self.filter(queryset)
+    return queryset
+  def get_context_data(self, **kwargs):
+    context = super(FilterMixin, self).get_context_data(**kwargs)
+    for filter_key in self.filter_on:
+      if filter_key in self.request.GET: context[filter_key] = self.request.GET
+    return context
+
+
+
+
 class UpdateView(MessageMixin, vanilla.UpdateView): pass
 class FormView(MessageMixin, vanilla.FormView): pass
 
 #  For this project view and url names will follow verb_noun naming pattern.
-
-class ListTags(LoginRequiredMixin, vanilla.ListView):
-    model = Tag
+class ListTags(FilterMixin, LoginRequiredMixin, vanilla.ListView):
+  model = Tag
+  filter_on=['owner']
+  def filter_owner(self, qs, value):
+    return qs.filter(owner=self.request.user)
 
 class EditTag(LoginRequiredMixin, vanilla.UpdateView):
   model = Tag
@@ -88,6 +115,12 @@ class TagImageAjax(LoginRequiredMixin, UpdateView):
 
 class ShowTag(vanilla.DetailView):
   model = Tag
+  def get(self, request, *args, **kwargs):
+    self.object = self.get_object()
+    if self.request.user.is_authenticated and self.object.owner == self.request.user:
+      return HttpResponseRedirect(reverse("edit_tag", kwargs={"pk":self.object.pk}))
+    context = self.get_context_data()
+    return self.render_to_response(context)
 
 class SearchTag(FormView):
   form_class = SearchForm
