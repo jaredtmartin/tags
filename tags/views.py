@@ -82,9 +82,6 @@ class FilterMixin(object):
       if filter_key in self.request.GET: context[filter_key] = self.request.GET
     return context
 
-
-
-
 class UpdateView(MessageMixin, vanilla.UpdateView): pass
 class FormView(MessageMixin, vanilla.FormView): pass
 
@@ -101,13 +98,29 @@ class EditTag(LoginRequiredMixin, vanilla.UpdateView):
   def post(self, request, *args, **kwargs):
     return self.get(request, *args, **kwargs)
 
-class TagNameAjax(LoginRequiredMixin, UpdateView):
+class AjaxUpdateView(UpdateView):
+  def form_valid(self, form):
+    self.object = form.save()
+    context = self.get_context_data(form=form)
+    # Send message if appropriate
+    msg=self.get_success_message(form)
+    if msg: messages.success(self.request, msg)
+    return self.render_to_response(context)
+
+  def form_invalid(self, form):
+    # Send message if appropriate
+    error_msg=self.get_error_message(form)
+    if error_msg: messages.success(self.request, error_msg)
+    return super(AjaxUpdateView, self).form_invalid(form)
+#  For this project view and url names will follow verb_noun naming pattern.
+
+class TagNameAjax(AjaxUpdateView):
   model = Tag
   form_class = TagNameForm
   template_name = "tags/tag_name.html"
   error_message = "There was an error updating the tag's name."
 
-class TagImageAjax(LoginRequiredMixin, UpdateView):
+class TagImageAjax(AjaxUpdateView):
   model = Tag
   form_class = TagImageForm
   template_name = "tags/tag_image.html"
