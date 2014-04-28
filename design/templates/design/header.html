@@ -1,7 +1,7 @@
 {% extends "design/base.html" %}
 {% block header %}
-  <div class="row">
-    <div class="col-md-10 col-md-offset-1">
+  <div class="container">
+    <div class="col-md-s10 col-md-osffset-1">
       <div class="navbar navbar-thin">
         <div class="navbar-inner">
           <div class="container">
@@ -10,7 +10,7 @@
               <ul class="nav">
                 <li class="logo-cell"><a href="#fakelink" class="navbar-brand"><img src="{{STATIC_URL}}img/YesTagsLogo.gif"></a></li>
                 <li><a href="#">Store</a></li>
-                <li><a href="#">How it Works</a></li>
+                <li><a href="{% url "howitworks" %}">How it Works</a></li>
                 {% if user.is_authenticated %} 
                   <li><a href="{% url "list_tags" %}">My Tags</a></li>
                 {% endif %}

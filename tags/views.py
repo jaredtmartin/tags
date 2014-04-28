@@ -219,4 +219,6 @@ class RegisterTag(FormView):
     messages.success(self.request, self.success_message)
     return HttpResponseRedirect(reverse('edit_tag', kwargs={'pk':tag.pk}))
 
+class HowItWorks(vanilla.TemplateView):
+  template_name = 'tags/how_it_works.html'
     
