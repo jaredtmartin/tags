@@ -1,6 +1,77 @@
 ul {
   text-decoration: none;
 }
+.landing-section h1.lead {
+  font-size: 3.5em;
+}
+.landing-section li {
+  font-size: 2em;
+  font-weight: 200;
+}
+.landing-section p {
+  font-size: 2.0em;
+  font-weight: 200;
+  text-align: left;
+}
+.landing-section {
+  height: 400px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  padding-top: 60px;
+}
+.call-to-action {
+  background: none repeat scroll 0 0 #F1C40F;
+  color: #FFFFFF;
+  border-radius: 6px;
+  text-align: center;
+  padding-top: 30px;
+  height: 100px;
+}
+div.fast-start {
+  background: #00ff00 url('/static/img/landing/jog.png') no-repeat border-box center;
+  color: white;
+}
+div.durable {
+  background: #00ff00 url('/static/img/landing/durable_light.png') no-repeat border-box center;
+  color: white;
+}
+div.instant {
+  height: auto;
+}
+div.work-for-you img {
+  position: relative;
+  top: -100px;
+}
+div.video-block img {
+  position: relative;
+  top: -50px;
+}
+div.video-block {
+  height: auto;
+}
+div.pets img {
+  position: relative;
+  top: -50px;
+}
+div.international {
+  background: #00ff00 url('/static/img/landing/sail3.png') no-repeat border-box center;
+  height: 370px;
+  padding-top: 30px;
+}
+div.international h1 {
+  text-align: left;
+}
+div.lifetime {
+  background: #00ff00 url('/static/img/landing/lifetime.png') no-repeat border-box center;
+  color: white;
+  height: 370px;
+}
+div.international img {
+  margin-top: 40px;
+}
+.call-to-action button {
+  margin-left: 30px;
+}
 .alert-error {
   background-color: #F2DEDE;
   border-color: #EED3D7;
@@ -48,6 +119,7 @@ h1.page-title {
 }
 .bottom-menu.yes-footer {
   background: #f1c40f;
+  margin-top: 30px;
   color: white;
 }
 .bottom-menu.yes-footer a {
