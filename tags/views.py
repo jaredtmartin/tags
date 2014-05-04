@@ -221,4 +221,6 @@ class RegisterTag(FormView):
 
 class HowItWorks(vanilla.TemplateView):
   template_name = 'tags/how_it_works.html'
+class Home(vanilla.TemplateView):
+  template_name = 'tags/landing.html'
     

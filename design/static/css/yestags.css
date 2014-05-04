@@ -1,8 +1,50 @@
+.recommend {
+  margin-top:20px;
+  /*font-weight: 300;*/
+}
+.recommend .client{
+  font-size: 1.2em;
+  float:right;
+  text-align:right;
+  width:75%;
+  margin-left:15px;
+}
+.recommend .quote{
+  font-size: 1.5em;
+  float:left;
+  width:75%;
+  margin-left:15px;
+}
+.recommend img{
+  width:64px;
+  height:64px;
+  float:left;
+  border-radius: 24px;
+}
+#header.container, #waist.container  {
+  width:100%;
+  max-width:none;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left:0;
+  margin-right:0;
+}
+.search-now p{
+  font-size: 1.5em;
+}
+.search-now input.form-control{
+  width:70%;
+  display:inline;
+}
+.report-tag-call{
+  text-align: right;
+}
 ul {
   text-decoration: none;
 }
 .landing-section h1.lead {
   font-size: 3.5em;
+  margin-top: 110px;
 }
 .landing-section li {
   font-size: 2em;
@@ -14,10 +56,10 @@ ul {
   text-align: left;
 }
 .landing-section {
-  height: 400px;
-  margin-top: 50px;
-  margin-bottom: 50px;
-  padding-top: 60px;
+  height: 500px;
+ /* margin-top: 50px;
+  margin-bottom: 50px;*/
+  /*padding-top: 110px;*/
 }
 .call-to-action {
   background: none repeat scroll 0 0 #F1C40F;
@@ -26,21 +68,32 @@ ul {
   text-align: center;
   padding-top: 30px;
   height: 100px;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
+.call-to-action.dark {
+  background: none repeat scroll 0 0 #2C3E50;
+}
+.call-to-action.dark button{
+  background-color:  #F1C40F;
+}
+
 div.fast-start {
-  background: #00ff00 url('/static/img/landing/jog.png') no-repeat border-box center;
-  color: white;
+  background: white url('/static/img/landing/jog.png') no-repeat border-box center;
+  /*color: white;*/
 }
-div.durable {
-  background: #00ff00 url('/static/img/landing/durable_light.png') no-repeat border-box center;
-  color: white;
+div.light img {
+  margin-top: 170px;
 }
-div.instant {
-  height: auto;
+div.light .recommend img {
+  margin-top: 0;
+}
+.landing-section.light h1.lead {
+  margin-top:150px;
 }
 div.work-for-you img {
   position: relative;
-  top: -100px;
+  /*top: -100px;*/
 }
 div.video-block img {
   position: relative;
@@ -48,26 +101,51 @@ div.video-block img {
 }
 div.video-block {
   height: auto;
+  margin-top:100px;
+}
+
+.landing-section.video-block h1.lead{
+  margin-top:50px;
 }
 div.pets img {
   position: relative;
-  top: -50px;
+  /*top: -110px;*/
+}
+div.landing-section.image-background{
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 div.international {
-  background: #00ff00 url('/static/img/landing/sail3.png') no-repeat border-box center;
-  height: 370px;
-  padding-top: 30px;
+  background: white url('/static/img/landing/sail.png') no-repeat border-box center;
 }
 div.international h1 {
   text-align: left;
 }
 div.lifetime {
-  background: #00ff00 url('/static/img/landing/lifetime.png') no-repeat border-box center;
+  background: white url('/static/img/landing/lifetime.png') no-repeat border-box center;
   color: white;
-  height: 370px;
+  /*height: 370px;*/
+}
+div.instant {
+  background: white url('/static/img/landing/city.png') no-repeat border-box center;
+  color: white;
+}
+div.instant h1.lead{
+  margin-top: 80px;
 }
 div.international img {
   margin-top: 40px;
+}
+div.guarantee h1.lead{
+  margin-top:80px;
+}
+div.guarantee img{
+  margin-top:150px;
+}
+div.guarantee .recommend img{
+  margin-top:0;
 }
 .call-to-action button {
   margin-left: 30px;

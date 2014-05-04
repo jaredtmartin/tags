@@ -15,7 +15,7 @@ urlpatterns = patterns('',
 		url(r'^admin/', include(admin.site.urls)),
     url(r'^tags/', include('tags.urls')),
     url(r'^auth/', include('authentication.urls')),
-    url(r'^$', RedirectView.as_view(url=reverse_lazy('search'))),
+    url(r'^$', RedirectView.as_view(url=reverse_lazy('home'))),
 )
 
 # This is used to serve user uploaded files in dev mode
