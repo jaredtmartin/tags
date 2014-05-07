@@ -1,31 +1,38 @@
 {% extends "design/header.html" %}
 {% block content %}
-<div class="row search-now">
-  <div class="col-md-3 col-md-offset-2 report-tag-call">
-    <p>Found a tag? Report it now <span class="fui-arrow-right"></span></p>
-  </div>
-  <div class="col-md-4">
-    <form action="{% url "search" %}" method="post">{% csrf_token %}
-      <input name="q" class="form-control search-tag" placeholder="Search"> <button type="submit" class="btn btn-primary">Report It</button></p>
-    </form>
-  </div>
-</div>
-  <div class="row landing-section video-block">
-    <div class="col-md-4 col-md-offset-1">
-      <h1 class="lead">Never lose anything again!</h1 class="lead">
-      <p>Check out our video <span class="fui-arrow-right"></span></p>
-    </div>
-    <div class="col-md-5">
-      <img src="{{STATIC_URL}}img/landing/laptop.png" >
+  <div class="row search-now">
+    <div class="col-md-4 col-md-offset-3 report-tag-call">
+      <p>Found a tag?  <button type="submit" class="btn btn-primary">Report It</button></p>
     </div>
   </div>
-  <div class="row call-to-action dark">
-    <p>Buy your first set of YesTags now and get a 30% discount! <button class="btn btn-primary ">Go to store</button> </p>
+  <section class="video">
+      <video loop="loop" autoplay="autoplay" preload="auto" id="video_background">
+        <source type="video/mp4" src="http://designmodo.com/storage/startuppreview.mp4"></source>
+        <source type="video/ogg" src="http://designmodo.com/storage/startuppreview.ogg"></source>
+        <source type="video/webm" src="http://designmodo.com/storage/startuppreview.webm"></source>
+        bgvideo
+      </video>
+      <p>Check out our videos!</p>
+      <a class="play" target="_blank" href="#" data-toggle="modal" data-target="#videoModal"><span class="fui-play"></span></a>
+      <div class="videoRow">
+        <!-- <div class="fake_img">:)</div>
+        <div class="fake_img">:)</div>
+        <div class="fake_img">:)</div> -->
+        <a href="" data-toggle="modal" data-target="#videoModal"><img class="video-thumbnail" src="{{STATIC_URL}}img/landing/video-thumb1.png"></a>
+        <a href="" data-toggle="modal" data-target="#videoModal"><img class="video-thumbnail" src="{{STATIC_URL}}img/landing/video-thumb2.png"></a>
+        <a href="" data-toggle="modal" data-target="#videoModal"><img class="video-thumbnail" src="{{STATIC_URL}}img/landing/video-thumb3.png"></a>
+      </div>
+  </section>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1  call-to-action dark">
+      <p>Buy your first set of YesTags now and get a 30% discount! <button class="btn btn-primary ">Go to store</button> </p>
+    </div>
   </div>
   <div class="row landing-section fast-start image-background">
     <div class="col-md-6 col-md-offset-1 ">
       <h1 class="lead">Get Started in Minutes</h1>
       <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+      <p><a href="" data-toggle="modal" data-target="#startModal">Click here to see a video on how to get started</a></p>
       <div class="recommend">
         <img src="{{STATIC_URL}}img/landing/face2.png">
         <div class="quote">"I really love what they've done with the place."</div>
@@ -33,8 +40,10 @@
       </div>
     </div>
   </div>
-  <div class="row call-to-action dark">
-    <p>What are you waiting for? <button class="btn btn-primary ">Get started now!</button> </p>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1  call-to-action dark">
+      <p>What are you waiting for? <button class="btn btn-primary ">Get started now!</button> </p>
+    </div>
   </div>
   <div class="row landing-section work-for-you">
     <div class="col-md-5 col-md-offset-1 ">
@@ -45,6 +54,7 @@
         <li>Consectetuer adipiscing elit</li>
         <li>Sed diam nonummy</li>
       </ul>
+      <p><a href="" data-toggle="modal" data-target="#workModal">Click here to see how they run!</a></p>
       <div class="recommend">
         <img src="{{STATIC_URL}}img/landing/face2.png">
         <div class="quote">"I can't believe it's not butter!"</div>
@@ -54,24 +64,30 @@
     <img src="{{STATIC_URL}}img/landing/workforyou.png" >
   </div>
   <div class="row landing-section international image-background">
-    <div class="col-md-6 col-md-offset-1 ">
-      <h1 class="lead">International Coverage</h1>  
-      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
-      <div class="recommend">
-        <img src="{{STATIC_URL}}img/landing/face4.png">
-        <div class="quote">"A word to the wise ain't necessary - it's the stupid ones that need the advice."</div>
-        <div class="client"> - Bill Crosby</div>
+    <div class="col-md-7 col-md-offset-5 ">
+      <div class="international-block">
+        <h1 class="lead">International Coverage</h1>  
+        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+        <p><a href="" data-toggle="modal" data-target="#internationalModal">More information</a></p>
+        <div class="recommend">
+          <img src="{{STATIC_URL}}img/landing/face4.png">
+          <div class="quote">"A word to the wise ain't necessary - it's the stupid ones that need the advice."</div>
+          <div class="client"> - Bill Crosby</div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="row call-to-action dark">
-    <p>Find the perfect tags for your next vacation <button class="btn btn-primary ">in the store</button> </p>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1  call-to-action dark">
+      <p>Find the perfect tags for your next vacation <button class="btn btn-primary ">in the store</button> </p>
+    </div>
   </div>
 
   <div class="row landing-section light">
     <div class="col-md-6 col-md-offset-1 ">
       <h1 class="lead">Safe, Durable & Light Weight</h1>
       <p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip:</p>
+      <p><a href="" data-toggle="modal" data-target="#lightModal">Click here to see the specs</a></p>
       <div class="recommend">
         <img src="{{STATIC_URL}}img/landing/face2.png">
         <div class="quote">"Behind every great man is a woman rolling her eyes."</div>
@@ -86,6 +102,7 @@
     <div class="col-md-6 col-md-offset-1 ">
     <h1 class="lead">24x7 Instant Notification via Email & SMS</h1>
       <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+      <p><a href="" data-toggle="modal" data-target="#instantModal">How long does it take? Try it out for yourself</a></p>
       <div class="recommend">
         <img src="{{STATIC_URL}}img/landing/face2.png">
         <div class="quote">"A day without sunshine is like, you know, night."</div>
@@ -103,6 +120,7 @@
         <li>Consectetuer adipiscing elit</li>
         <li>Sed diam nonummy</li>
       </ul>
+      <p><a href="" data-toggle="modal" data-target="#petsModal">Check out our selection</a></p>
       <div class="recommend">
         <img src="{{STATIC_URL}}img/landing/face1.png">
         <div class="quote">"If the facts don't fit the theory, change the facts."</div>
@@ -113,13 +131,16 @@
       <img src="{{STATIC_URL}}img/landing/pets.png" >
     </div>
   </div>
-  <div class="row call-to-action dark">
-    <p><button class="btn btn-primary ">Go to the store</button> to find the perfect tag for your furry friend!  </p>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1  call-to-action dark">
+      <p><button class="btn btn-primary ">Go to the store</button> to find the perfect tag for your furry friend!  </p>
+    </div>
   </div>
   
   <div class="row landing-section compatible">
     <div class="col-md-5 col-md-offset-1 ">
       <h1 class="lead">Compatible with All Major Email & Cellular Providers</h1>
+      <p><a href="" data-toggle="modal" data-target="#compatibleModal">See a full list</a></p>
       <div class="recommend">
         <img src="{{STATIC_URL}}img/landing/face4.png">
         <div class="quote">"If the facts don't fit the theory, change the facts."</div>
@@ -135,6 +156,7 @@
     <div class="col-md-5 col-md-offset-6 ">
     <h1 class="lead">Lifetime Service</h1>  
       <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+      <p><a href="" data-toggle="modal" data-target="#lifetimeModal">See why it's so reliable</a></p>
       <div class="recommend">
         <img src="{{STATIC_URL}}img/landing/face2.png">
         <div class="quote">"If the facts don't fit the theory, change the facts."</div>
@@ -150,6 +172,7 @@
     <div class="col-md-5 ">
       <h1 class="lead">300% Money Back Guarantee</h1>
       <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+      <p><a href="" data-toggle="modal" data-target="#guaranteeModal">The best guarantee in town.</a></p>
       <div class="recommend">
         <img src="{{STATIC_URL}}img/landing/face1.png">
         <div class="quote">"If the facts don't fit the theory, change the facts."</div>
@@ -157,7 +180,171 @@
       </div>
     </div>
   </div>
-  <div class="row call-to-action dark">
-    <p>Try it out for yourself <button class="btn btn-primary ">Go to store</button> </p>
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1  call-to-action dark">
+      <p>Try it out for yourself <button class="btn btn-primary ">Go to store</button> </p>
+    </div>
   </div>
+
+
+  <div class="modal" id="videoModal" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">Our video</h3>
+        </div>
+        <div class="modal-body">
+          <iframe width="560" height="315" src="//www.youtube.com/embed/UC4vz6IbdtY" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>  
+  </div>
+  <div class="modal" id="startModal" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">Get Started!</h3>
+        </div>
+
+        <div class="modal-body">
+          <iframe width="560" height="315" src="//www.youtube.com/embed/UC4vz6IbdtY" frameborder="0" allowfullscreen></iframe>
+        </div>
+
+        <div class="modal-footer">
+          <a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>
+        </div>
+      </div>
+    </div>  
+  </div>
+  <div class="modal" id="workModal" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">See how they work</h3>
+        </div>
+        <div class="modal-body">
+          <iframe width="560" height="315" src="//www.youtube.com/embed/Nu4Zzf7JNro" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>
+        </div>
+      </div>
+    </div>  
+  </div>
+  <div class="modal" id="internationalModal" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">You can use it anywhere!</h3>
+        </div>
+        <div class="modal-body">
+          <iframe width="560" height="315" src="//www.youtube.com/embed/UC4vz6IbdtY" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>
+        </div>
+      </div>
+    </div>  
+  </div>
+  <div class="modal" id="lightModal" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">It doesn't weigh anything!</h3>
+        </div>
+        <div class="modal-body">
+          <iframe width="560" height="315" src="//www.youtube.com/embed/-4PqkJA9rEA" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>
+        </div>
+      </div>
+    </div>  
+  </div>
+  <div class="modal" id="instantModal" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">You can use it anywhere!</h3>
+        </div>
+        <div class="modal-body">
+          <img src="/static/img/landing/laptop.png">
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>
+        </div>
+      </div>
+    </div>  
+  </div>
+  <div class="modal" id="petsModal" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">You can use it anywhere!</h3>
+        </div>
+        <div class="modal-body">
+          <iframe width="560" height="315" src="//www.youtube.com/embed/4SgFTswGBa0" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>
+        </div>
+      </div>
+    </div>  
+  </div>
+  <div class="modal" id="compatibleModal" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">You can use it anywhere!</h3>
+        </div>
+        <div class="modal-body">
+          <iframe width="560" height="315" src="//www.youtube.com/embed/0qlX-hPwmwc" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>
+        </div>
+      </div>
+    </div>  
+  </div>
+  <div class="modal" id="lifetimeModal" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">You can use it anywhere!</h3>
+        </div>
+        <div class="modal-body">
+          <iframe width="560" height="315" src="//www.youtube.com/embed/Mf98mKxIVqs" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>
+        </div>
+      </div>
+    </div>  
+  </div>
+  <div class="modal" id="guaranteeModal" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close fui-cross" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">Have you tried turning it off and on again?</h3>
+        </div>
+        <div class="modal-body">
+          <iframe width="560" height="315" src="//www.youtube.com/embed/rksCTVFtjM4" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-primary" data-dismiss="modal">OK</a>
+        </div>
+      </div>
+    </div>  
+  </div>
+</div>
 {% endblock content %}

@@ -42,18 +42,122 @@
 ul {
   text-decoration: none;
 }
+.video{
+  height:500px;
+  /*width:100%;*/
+  text-align: center;
+}
+video {
+  left:0;
+  position:relative;
+  top:0;
+  opacity: 0.7;
+  /*top: 130px;*/
+  width: 100%; 
+  height: 500px;
+}
+.video p{
+  position:relative;
+  top:-390px;
+  text-align: center;
+  color:white;
+  font-size: 4em;
+  font-weight: 300;
+}
+.video .play {
+  background-color: rgba(0, 0, 0, 0);
+  border: 4px solid #FFFFFF;
+  border-radius: 100%;
+  cursor: pointer;
+  display: inline-block;
+  height: 67px;
+  line-height: 59px;
+  outline: medium none;
+  position: relative;
+  top:-380px;
+  /*left:600px;*/
+  /*left:600px;*/
+  /*top:220px;*/
+  /*margin-left:auto;*/
+  /*margin-right:auto;*/
+  transition: all 0.4s ease 0s;
+  width: 67px;
+    /*height: auto;*/
+    /*margin: 0 auto;*/
+    /*padding: 10px;*/
+    /*position: relative;*/
+}
+.video .fui-play {
+  color: #FFFFFF;
+  font-size: 20px;
+  font-weight: normal;
+  left: 4px;
+  position: relative;
+  top: 1px;
+}
+.video .sdf{
+  color: #FFFFFF;
+  font-size: 21px;
+  font-weight: 100;
+  margin: 20px 55px;
+  opacity: 0;
+  text-transform: uppercase;
+  transition: all 1s ease 0s;
+}
+.video .videoRow{
+  position: relative;
+  /*top:-300px;*/
+  width:100%;
+  top:-350px;
+}
+.video .videoRow img{
+    display:inline-block;
+    /*margin:5px 10%;*/
+    /*padding:5px;*/
+    
+    border:1px solid #CCC;
+    /*height: 75px;*/
+    margin: 5px 5%;
+    padding: 5px;
+    width: 150px;
+    opacity: 0.8;
+}
+
+
+.row{
+  margin-left: 0;
+  margin-right: 0;
+}
+#navbar .navbar-inner{
+  border-radius: 0;
+}
+/*div.video-block img {
+  position: relative;
+  top: -50px;
+}
+div.video-block {
+  height: auto;
+  margin-top:100px;
+}*/
+.landing-section.video-block h1.lead{
+  margin-top:50px;
+}
 .landing-section h1.lead {
   font-size: 3.5em;
-  margin-top: 110px;
+  margin-top: 30px;
 }
 .landing-section li {
   font-size: 2em;
   font-weight: 200;
 }
 .landing-section p {
-  font-size: 2.0em;
+  font-size: 1.6em;
   font-weight: 200;
   text-align: left;
+  line-height: 1.5;
+}
+.landing-section p a{
+  color:#519ac7;
 }
 .landing-section {
   height: 500px;
@@ -61,13 +165,16 @@ ul {
   margin-bottom: 50px;*/
   /*padding-top: 110px;*/
 }
+.modal-body img{
+  max-width:100%;
+}
 .call-to-action {
   background: none repeat scroll 0 0 #F1C40F;
   color: #FFFFFF;
   border-radius: 6px;
   text-align: center;
-  padding-top: 30px;
-  height: 100px;
+  padding-top: 20px;
+  height: 80px;
   margin-top: 50px;
   margin-bottom: 50px;
 }
@@ -94,24 +201,13 @@ div.light .recommend img {
   margin-top: 0;
 }
 .landing-section.light h1.lead {
-  margin-top:150px;
+  /*margin-top:120px;*/
 }
 div.work-for-you img {
   position: relative;
   /*top: -100px;*/
 }
-div.video-block img {
-  position: relative;
-  top: -50px;
-}
-div.video-block {
-  height: auto;
-  margin-top:100px;
-}
 
-.landing-section.video-block h1.lead{
-  margin-top:50px;
-}
 div.pets img {
   position: relative;
   /*top: -110px;*/
@@ -123,7 +219,19 @@ div.landing-section.image-background{
   background-size: cover;
 }
 div.international {
-  background: white url('/static/img/landing/sail.png') no-repeat border-box center;
+  background: white url('/static/img/landing/map.jpg') no-repeat border-box center;
+  /*color:white;*/
+}
+div.international h1.lead{
+  margin-top: 0;
+}
+div.international-block{
+  background-color: rgba(255,255,255,0.7);
+  border-radius: 6px;
+  height:460px;
+  margin:20px;
+  padding-left:20px;
+  padding-right:20px;
 }
 div.international h1 {
   text-align: left;
@@ -133,18 +241,21 @@ div.lifetime {
   color: white;
   /*height: 370px;*/
 }
+div.lifetime h1.lead{
+  margin-top: 30px;
+}
 div.instant {
   background: white url('/static/img/landing/city.png') no-repeat border-box center;
   color: white;
 }
 div.instant h1.lead{
-  margin-top: 80px;
+  margin-top: 30px;
 }
-div.international img {
+/*div.international img {
   margin-top: 40px;
-}
+}*/
 div.guarantee h1.lead{
-  margin-top:80px;
+  margin-top: 30px;
 }
 div.guarantee img{
   margin-top:150px;
