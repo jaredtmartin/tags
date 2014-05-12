@@ -12,12 +12,12 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'YesTags.views.home', name='home'),
     # url(r'^YesTags/', include('YesTags.foo.urls')),
+    url(r'^$', Home.as_view(), name='home'),
 		url(r'^admin/', include(admin.site.urls)),
     url(r'^tags/', include('tags.urls')),
     url(r'^auth/', include('authentication.urls')),
     # url(r'^$', RedirectView.as_view(url=reverse_lazy('home'))),
 
-    url(r'^$', Home.as_view(), name='home'),
 )
 
 # This is used to serve user uploaded files in dev mode
