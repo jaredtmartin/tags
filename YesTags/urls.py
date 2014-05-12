@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.core.urlresolvers import reverse_lazy
-
+from tags.views import Home
 from django.views.generic import RedirectView
 
 admin.autodiscover()
@@ -15,7 +15,9 @@ urlpatterns = patterns('',
 		url(r'^admin/', include(admin.site.urls)),
     url(r'^tags/', include('tags.urls')),
     url(r'^auth/', include('authentication.urls')),
-    url(r'^$', RedirectView.as_view(url=reverse_lazy('home'))),
+    # url(r'^$', RedirectView.as_view(url=reverse_lazy('home'))),
+
+    url(r'^$', Home.as_view(), name='home'),
 )
 
 # This is used to serve user uploaded files in dev mode
