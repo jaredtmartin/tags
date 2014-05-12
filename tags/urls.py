@@ -5,7 +5,7 @@ from tags.views import (ListTags, EditTag, TagNameAjax, TagImageAjax, ShowTag, S
 #  For this project view and url names will follow verb_noun naming pattern.
 
 urlpatterns = patterns('',
-    url(r'^$', Home.as_view(), name='home'),
+    url(r'^$', ListTags.as_view(), name='list_tags'),
     # url(r'^edit/(?P<object>\d+)/$', EditTag.as_view(), name='edit_tag'),
     url(r'^(?P<pk>\d+)/edit/$', EditTag.as_view(), name='edit_tag'),
     url(r'^(?P<pk>\d+)/$', ShowTag.as_view(), name='show_tag'),
