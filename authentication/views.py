@@ -28,7 +28,7 @@ class SignUp(vanilla.CreateView):
     if not Site._meta.installed:
         opts['domain_override'] = RequestSite(request).domain
     form.save(**opts)
-    messages.success(self.request, 'Congratulations! You accounts as been created successfully.')
+    messages.success(self.request, 'Congratulations! You account has been created successfully.')
     return HttpResponseRedirect(reverse('signup_done'))
 
 class SignUpDone(vanilla.TemplateView):
