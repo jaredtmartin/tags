@@ -45,9 +45,20 @@ class User(AbstractBaseUser):
     city = models.CharField('city', max_length=32, blank=True, default="")
     state = models.CharField('state', max_length=32, blank=True, default="")
     phone = models.CharField('phone number', max_length=16, blank=True, default="")
+    phone2 = models.CharField('alternate phone number', max_length=16, blank=True, default="")
+    email2 = models.CharField('alternate email', max_length=16, blank=True, default="")
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-
+    use_nominee = models.BooleanField(default=False)
+    nominee_first_name = models.CharField('nominee first name', max_length=30, blank=True)
+    nominee_last_name = models.CharField('nominee last name', max_length=30, blank=True)
+    nominee_street = models.CharField('nominee street address', max_length=32, blank=True, default="")
+    nominee_city = models.CharField('nominee city', max_length=32, blank=True, default="")
+    nominee_state = models.CharField('nominee state', max_length=32, blank=True, default="")
+    nominee_phone = models.CharField('nominee phone number', max_length=16, blank=True, default="")
+    nominee_phone2 = models.CharField('nominee alternate phone number', max_length=16, blank=True, default="")
+    nominee_email = models.CharField('nominee email', max_length=16, blank=True, default="")
+    nominee_email2 = models.CharField('nominee alternate email', max_length=16, blank=True, default="")
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

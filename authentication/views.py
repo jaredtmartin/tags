@@ -115,6 +115,7 @@ class UserUpdateView(UpdateView):
     form = self.get_form(form_class)
     # user_profile_form = UserProfileForm(self.request.POST, instance=self.object.get_profile())
     if form.is_valid():
+      print "form.cleaned_data:" + str(form.cleaned_data)
       return self.form_valid(form)
     else:
       return self.form_invalid(form)

@@ -1,9 +1,9 @@
 import vanilla
 from django.conf import settings
-from tags.models import Tag
+from tags.models import Tag, Event
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from tags.forms import TagNameForm, TagImageForm, SearchForm, ReportContactForm, RegisterCodeForm
+from tags.forms import TagNameForm, TagImageForm, SearchForm, ReportContactForm, RegisterCodeForm, TagRewardForm
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
@@ -55,11 +55,27 @@ class MessageMixin(object):
     if msg: messages.success(self.request, msg)
     return super(MessageMixin, self).form_valid(form)
 
+  def get_context_data(self, **kwargs):
+    context = super(MessageMixin, self).get_context_data(**kwargs)
+    print ("self.request.user.is_authenticated():"+str(self.request.user.is_authenticated()))
+    if self.request.user.is_authenticated(): 
+      context['found_events'] = Event.objects.filter(viewed=False, tipo='Found', owner=self.request.user)
+    return context
   def form_invalid(self, form):
     error_msg=self.get_error_message(form)
     if error_msg: messages.error(self.request, error_msg)
     print "form.errors = %s" % str(form.errors)
     return super(MessageMixin, self).form_invalid(form)
+
+class ReportMessagesMixin(object):
+  pass
+  # def get_context_data(self, **kwargs):
+  #   context = super(ReportMessagesMixin, self).get_context_data(**kwargs)
+  #   if self.request.user.is_authenticated():
+  #     for event in Event.objects.filter(viewed=False, tipo='Found', owner=self.request.user):
+  #       msg = 'Your item, %s has been found! <a href="%s">Click here to get it back.</a>' % (event.tag.name,'')
+  #       messages.success(self.request, msg)
+  #   return context
 
 class FilterMixin(object):
   filter_on = []
@@ -86,7 +102,7 @@ class UpdateView(MessageMixin, vanilla.UpdateView): pass
 class FormView(MessageMixin, vanilla.FormView): pass
 
 #  For this project view and url names will follow verb_noun naming pattern.
-class ListTags(FilterMixin, LoginRequiredMixin, vanilla.ListView):
+class ListTags(FilterMixin, MessageMixin, LoginRequiredMixin, vanilla.ListView):
   model = Tag
   filter_on=['owner']
   def filter_owner(self, qs, value):
@@ -114,19 +130,42 @@ class AjaxUpdateView(UpdateView):
     return super(AjaxUpdateView, self).form_invalid(form)
 #  For this project view and url names will follow verb_noun naming pattern.
 
-class TagNameAjax(AjaxUpdateView):
+class AjaxEventView(AjaxUpdateView):
+  def form_valid(self, form):
+    self.object = form.save()
+    event = self.create_event(self.object)
+    context = self.get_context_data(form=form, event=event)
+    # Send message if appropriate
+    msg=self.get_success_message(form)
+    if msg: messages.success(self.request, msg)
+    return self.render_to_response(context)
+
+class TagNameAjax(AjaxEventView):
   model = Tag
   form_class = TagNameForm
   template_name = "tags/tag_name.html"
   error_message = "There was an error updating the tag's name."
+  def create_event(self, object):
+    return Event.objects.create(tag=object, tipo='Name Changed', details="to: " + object.name, owner = object.owner)
 
-class TagImageAjax(AjaxUpdateView):
+class TagRewardAjax(AjaxEventView):
+  model = Tag
+  form_class = TagRewardForm
+  template_name = "tags/tag_reward.html"
+  error_message = "There was an error updating the tag's reward."
+
+  def create_event(self, object):
+    return Event.objects.create(tag=object, tipo='Reward Changed', details="to: " + object.reward, owner = object.owner)
+
+class TagImageAjax(AjaxEventView):
   model = Tag
   form_class = TagImageForm
   template_name = "tags/tag_image.html"
   error_message = "There was an error updating the tag's image."
+  def create_event(self, object): 
+    return Event.objects.create(tag=object, tipo='Image Changed', details="", owner = object.owner)
 
-class ShowTag(vanilla.DetailView):
+class ShowTag(vanilla.DetailView, ReportMessagesMixin):
   model = Tag
   def get(self, request, *args, **kwargs):
     self.object = self.get_object()
@@ -135,7 +174,7 @@ class ShowTag(vanilla.DetailView):
     context = self.get_context_data()
     return self.render_to_response(context)
 
-class SearchTag(FormView):
+class SearchTag(FormView, ReportMessagesMixin):
   form_class = SearchForm
   template_name="tags/search_form.html"
   def form_valid(self, form):
@@ -196,8 +235,20 @@ class ReportTag(EmailMixin, UpdateView):
         return self.form_valid(form)
       return self.form_invalid(form)
   def form_valid(self, form):
-    print "form.cleaned_data = %s" % str(form.cleaned_data)
-    self.send_email(self.object.owner, "Tag Located!", 
+    msg='by: '+form.cleaned_data['name']
+    if form.cleaned_data['phone']: msg += ' '+form.cleaned_data['phone']
+    if form.cleaned_data['email']: msg += ' '+form.cleaned_data['email']
+    Event.objects.create(
+      tag = self.object, 
+      tipo = 'Found', 
+      details = msg, 
+      name = form.cleaned_data['name'],
+      email = form.cleaned_data['email'],
+      phone = form.cleaned_data['phone'],
+      owner = self.object.owner,
+      reward = self.object.reward
+    )
+    self.send_email(self.object.owner, "Tag Located!",
       context={
         'object':self.object,
         'name':form.cleaned_data['name'],
@@ -215,13 +266,25 @@ class RegisterTag(FormView):
   def form_valid(self, form):
     code = form.cleaned_data['code']
     tag = Tag.objects.create(owner=self.request.user, code=code, name="New Tag")
+    Event.objects.create(tag=tag, tipo='Registered', details="", owner = tag.owner)
     code.delete()
     messages.success(self.request, self.success_message)
     return HttpResponseRedirect(reverse('edit_tag', kwargs={'pk':tag.pk}))
 
-class HowItWorks(vanilla.TemplateView):
+class HowItWorks(MessageMixin, vanilla.TemplateView):
   template_name = 'tags/how_it_works.html'
   
-class Home(vanilla.TemplateView):
+class Home(MessageMixin, vanilla.TemplateView):
   template_name = 'tags/landing.html'
-    
+
+class ViewEvent(vanilla.DetailView):
+  model = Event
+
+class DismissEvent(vanilla.UpdateView):
+  model = Event
+  template_name = "design/ajax.html"
+  def post(self, request, *args, **kwargs):
+    self.object = self.get_object()
+    self.object.viewed = True
+    self.object.save()
+    return self.render_to_response({})

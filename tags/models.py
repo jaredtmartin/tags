@@ -10,14 +10,9 @@ class Tag(models.Model):
   code = models.CharField(blank=False, max_length=8)
   owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tags')
   image = ImageWithThumbsField(upload_to='tag_images', sizes=((200,150),(300,250)))
+  reward = models.CharField(max_length=128)
   def __unicode__(self): return self.name
-
-class Report(models.Model):
-  tag = models.ForeignKey(Tag) 
-  name = models.CharField(max_length=64)
-  email = models.CharField(max_length=64)
-  phone = models.CharField(max_length=64)
-
+  
 class Code(models.Model):
   code = models.CharField(blank=True, max_length=8)
   def generate_code(self):
@@ -30,3 +25,16 @@ class Code(models.Model):
       if code: self.code = code
     super(Code, self).save(*args, **kwargs)
   def __unicode__(self): return self.code
+
+class Event(models.Model):
+  tag = models.ForeignKey(Tag, related_name='events')
+  owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='events')
+  details = models.CharField(max_length=64)
+  tipo = models.CharField(max_length=16)
+  created_at = models.DateTimeField(auto_now_add=True)
+  viewed = models.BooleanField(default=False)
+  name = models.CharField(max_length=64)
+  email = models.CharField(max_length=64)
+  phone = models.CharField(max_length=64)
+  reward = models.CharField(max_length=64)
+  def __unicode__(self): return self.tag.name + ' ' + self.tipo

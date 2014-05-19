@@ -72,6 +72,7 @@ class SimpleUserCreationFormWithFullName(SimpleUserCreationForm):
         fields = ("first_name","last_name")
     first_name = forms.CharField(label="First Name", widget=forms.TextInput(attrs={'placeholder':'First Name','class':'form-control'}))
     last_name = forms.CharField(label="Last Name", widget=forms.TextInput(attrs={'placeholder':'Last Name','class':'form-control'}))
+    email2 = forms.CharField(label="Alternative Email", widget=forms.TextInput(attrs={'placeholder':'Alternative Email','class':'form-control'}))
 
 # class UserCreationForm(forms.ModelForm):
 #     username = forms.RegexField(label="Username", max_length=30, regex=r'^[\w.@+-]+$',
@@ -141,16 +142,31 @@ class SimpleUserCreationFormWithFullName(SimpleUserCreationForm):
 def get_timezone_choices():
         return [(t,t) for t in pytz.common_timezones]
 class UserForm(ModelForm):
-    class Meta:
-        model = User
-        fields = ('first_name','last_name','email', 'street','city','state','phone')
-    first_name = forms.CharField(label="First Name", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'First Name','class':'form-control'}))
-    last_name = forms.CharField(label="Last Name", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Last Name','class':'form-control'}))
-    email = forms.CharField(label="xEmail Address", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Email Address','class':'form-control'}))
-    street = forms.CharField(label="Street Address", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Street Address','class':'form-control'}))
-    city = forms.CharField(label="City", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'City','class':'form-control'}))
-    state = forms.CharField(label="State", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'State','class':'form-control'}))
-    phone = forms.CharField(label="Phone", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Phone','class':'form-control'}))
+  class Meta:
+    model = User
+    fields = ('first_name','last_name','email', 'street','city','state','phone', 'email2', 'phone2','use_nominee', 'nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
+        'nominee_state', 'nominee_phone', 'nominee_phone2')
+  first_name = forms.CharField(label="First Name", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'First Name','class':'form-control'}))
+  last_name = forms.CharField(label="Last Name", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Last Name','class':'form-control'}))
+  email = forms.CharField(label="Email Address", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Email Address','class':'form-control'}))
+  email2 = forms.CharField(label="Alternate Email Address", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Alternate Email','class':'form-control'}))
+  street = forms.CharField(label="Street Address", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Street Address','class':'form-control'}))
+  city = forms.CharField(label="City", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'City','class':'form-control'}))
+  state = forms.CharField(label="State", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'State','class':'form-control'}))
+  phone = forms.CharField(label="Phone", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Phone','class':'form-control'}))
+  phone2 = forms.CharField(label="Second Phone", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Second Phone','class':'form-control'}))
+
+  use_nominee = forms.BooleanField(label="Use Nominee", required=False, widget=widgets.CheckboxInput(attrs={'placeholder':'Use Nominee','data-toggle':"checkbox"}))
+  nominee_first_name = forms.CharField(label="First Name", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'First Name','class':'form-control'}))
+  nominee_last_name = forms.CharField(label="Last Name", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Last Name','class':'form-control'}))
+  nominee_email = forms.CharField(label="Email Address", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Email Address','class':'form-control'}))
+  nominee_email2 = forms.CharField(label="Alternate Email Address", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Alternate Email','class':'form-control'}))
+  nominee_street = forms.CharField(label="Street Address", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Street Address','class':'form-control'}))
+  nominee_city = forms.CharField(label="City", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'City','class':'form-control'}))
+  nominee_state = forms.CharField(label="State", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'State','class':'form-control'}))
+  nominee_phone = forms.CharField(label="Phone", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Phone','class':'form-control'}))
+  nominee_phone2 = forms.CharField(label="Second Phone", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Second Phone','class':'form-control'}))
+
 
 class LoginForm(django_forms.AuthenticationForm):
     username = forms.CharField(label="E-mail", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'E-mail address','class':'form-control'}))

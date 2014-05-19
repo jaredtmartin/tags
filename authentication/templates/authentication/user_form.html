@@ -23,6 +23,14 @@
 		</div>
 	</div>
 	<div class="row input-row">
+		<div class="col-md-4 col-md-offset-3">
+					{{form.email2}}
+		</div>
+		<div class="col-md-2">
+					{{form.phone2}}
+		</div>
+	</div>
+	<div class="row input-row">
 		<div class="col-md-3 col-md-offset-3">
 					{{form.street}}
 		</div>
@@ -34,8 +42,53 @@
 		</div>
 	</div>
 	<div class="row input-row">
+	  <div class="col-md-6 col-md-offset-3 ">
+	  	<label class="checkbox" for="id_use_nominee">
+			  <input type="checkbox" value="yes" name="use_nominee" id="id_use_nominee" data-toggle="checkbox" {% if object.use_nominee%}checked="true"{% endif %}>
+			  Do you want to add a nominee?
+			</label>
+	  </div>
+	</div>
+	<div id="nominee-section" {% if not object.use_nominee %}style="display:none" {% endif %}>
+		<div class="row input-row">
+			<div class="col-md-3 col-md-offset-3">
+						{{form.nominee_first_name}}
+			</div>
+			<div class="col-md-3">
+						{{form.nominee_last_name}}
+			</div>
+		</div>
+		<div class="row input-row">
+			<div class="col-md-4 col-md-offset-3">
+						{{form.nominee_email}}
+			</div>
+			<div class="col-md-2">
+						{{form.nominee_phone}}
+			</div>
+		</div>
+		<div class="row input-row">
+			<div class="col-md-4 col-md-offset-3">
+						{{form.nominee_email2}}
+			</div>
+			<div class="col-md-2">
+						{{form.nominee_phone2}}
+			</div>
+		</div>
+		<div class="row input-row">
+			<div class="col-md-3 col-md-offset-3">
+						{{form.nominee_street}}
+			</div>
+			<div class="col-md-2">
+						{{form.nominee_city}}
+			</div>
+			<div class="col-md-1">
+						{{form.nominee_state}}
+			</div>
+		</div>
+	</div>
+	<div class="row input-row">
 		<div class="col-md-6 col-md-offset-3">
-					<p class="lead"><a href="{% url "change_password" %}">Click here to change your password</a></p>
+			<p class="lead"><a href="{% url "change_password" %}">Click here to change your password</a></p>
 		</div>
 	</div>
 	<div class="row input-row">
@@ -49,9 +102,13 @@
 {% endblock %}
 {% block js %}
 	<script type="text/javascript">
-
-$(document).ready(function () {
-  $('.selectpicker').selectpicker();
-});
-</script>
+		$(document).ready(function () {
+			// $(':checkbox').checkbox();
+		  $('.selectpicker').selectpicker();
+		  $('#id_use_nominee:checkbox').on('toggle', function() {
+			  $('#nominee-section').toggle();
+			  console.log("'toggled': " + JSON.stringify('toggled', null, 2));
+			});
+		});
+	</script>
 {% endblock js %}

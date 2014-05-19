@@ -43,7 +43,9 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'first_name','last_name','street','city','state','phone', 'is_active', 'is_admin']
+        fields = ['email', 'password', 'first_name','last_name','street','city','state','phone', 'is_active', 'is_admin', 
+        'nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
+        'nominee_state', 'nominee_phone', 'nominee_phone2']
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -60,11 +62,15 @@ class UserAdmin(UserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'first_name','last_name','street','city','state','phone', 'is_admin')
+    list_display = ('email', 'first_name','last_name','street','city','state','phone', 'is_admin', 
+        'nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
+        'nominee_state', 'nominee_phone', 'nominee_phone2')
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('first_name','last_name','street','city','state','phone')}),
+        ('Nominee', {'fields': ('nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
+        'nominee_state', 'nominee_phone', 'nominee_phone2')}),
         ('Permissions', {'fields': ('is_admin',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
