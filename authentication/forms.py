@@ -169,8 +169,15 @@ class UserForm(ModelForm):
 
 
 class LoginForm(django_forms.AuthenticationForm):
-    username = forms.CharField(label="E-mail", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'E-mail address','class':'form-control'}))
+    username = forms.CharField(label="E-mail", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'E-mail address or Phone Number','class':'form-control'}))
     password = forms.CharField(label="Password", widget=forms.PasswordInput(attrs={'placeholder':'Password','class':'form-control'}))
+    def clean_username(self):
+      username = self.cleaned_data["username"]
+      # user = User.objects.get(username__iexact=username)
+      users = User.objects.filter(email__iexact=username)
+      if not users: users = User.objects.filter(phone__iexact=username)
+      if users and users.count()==1 and users[0].email != username: username = users[0].email
+      return username
 
 class PasswordResetForm(django_forms.PasswordResetForm):
     email = forms.EmailField(label="E-mail", max_length=75, widget=widgets.TextInput(attrs={'placeholder':'E-mail address','class':'form-control'}))

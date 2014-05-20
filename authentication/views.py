@@ -14,6 +14,11 @@ from django.contrib import messages
 import vanilla
 from django.views.decorators.csrf import csrf_protect
 
+# # for LoginView
+# from forms import LoginForm
+# from django.utils.http import is_safe_url
+# from django.contrib.auth import login as auth_login
+
 class SignUp(vanilla.CreateView):
   model = User
   template_name = 'authentication/signup_form.html'
@@ -56,7 +61,25 @@ class SignUpConfirm(vanilla.View):
       context['validlink'] = False
     return HttpResponseRedirect(reverse('signup_complete'))
 
+# class LoginView(vanilla.FormView):
+#   success_url = None
+#   def get_form(self, data, files): return LoginForm(data)
 
+#   def form_valid(self, form):
+#     print 'request.POST.keys(): '+request.POST.keys()
+#     # if not is_safe_url(url=request.POST['redirect_to'], host=request.get_host()):
+#     #   redirect_to = resolve_url(settings.LOGIN_REDIRECT_URL)
+#     return HttpResponseRedirect(self.get_success_url())
+
+#   def form_invalid(self, form):
+#     context = self.get_context_data(form=form)
+#     return self.render_to_response(context)
+
+#   def get_success_url(self):
+#     if self.success_url is None:
+#       msg = "'%s' must define 'success_url' or override 'form_valid()'"
+#       raise ImproperlyConfigured(msg % self.__class__.__name__)
+#     return self.success_url    
 
 
 # def signup_confirm(request, uidb36=None, token=None,
