@@ -34,13 +34,22 @@
 		<div class="col-md-3 col-md-offset-3">
 					{{form.street}}
 		</div>
-		<div class="col-md-2">
+		<div class="col-md-3">
 					{{form.city}}
 		</div>
-		<div class="col-md-1">
+	</div>
+	<div class="row input-row">
+		<div class="col-md-2 col-md-offset-3">
 					{{form.state}}
 		</div>
+		<div class="col-md-3">
+					{{form.country}}
+		</div>
+		<div class="col-md-1">
+					{{form.timezone}}
+		</div>
 	</div>
+	
 	<div class="row input-row">
 	  <div class="col-md-6 col-md-offset-3 ">
 	  	<label class="checkbox" for="id_use_nominee">
@@ -83,6 +92,17 @@
 			</div>
 			<div class="col-md-1">
 						{{form.nominee_state}}
+			</div>
+		</div>
+		<div class="row input-row">
+			<div class="col-md-2 col-md-offset-3">
+						{{form.nominee_state}}
+			</div>
+			<div class="col-md-3">
+						{{form.nominee_country}}
+			</div>
+			<div class="col-md-1">
+						{{form.nominee_timezone}}
 			</div>
 		</div>
 	</div>

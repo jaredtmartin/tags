@@ -21,7 +21,7 @@
       </div>
     {% endif %}
     {% for event in found_events %}
-      <div class="event alert alert-error">
+      <div class="message event-message alert alert-error">
         <form id="dismiss-{{event.pk}}-form" class="dismiss-event-form" method="post">
           {% csrf_token %}
           <button type="button" class="close" onclick="dismissEvent('{% url 'dismissEvent' event.pk %}', {{event.id}});">×</button>

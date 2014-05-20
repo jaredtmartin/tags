@@ -13,7 +13,7 @@
                 <li><a href="#">Store</a></li>
                 <li><a href="{% url "howitworks" %}">How it Works</a></li>
                 {% if user.is_authenticated %} 
-                  <li><a href="{% url "list_tags" %}">My Tags</a></li>
+                  <li><a href="{% url "list_tags" %}">Yes Tagged Items</a></li>
                 {% endif %}
                 <li><a href=" {% url "search" %} ">Search</a></li>
                 <li><a href="{% url "register" %}">Register a Tag</a></li>

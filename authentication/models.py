@@ -47,6 +47,8 @@ class User(AbstractBaseUser):
     phone = models.CharField('phone number', max_length=16, blank=True, default="")
     phone2 = models.CharField('alternate phone number', max_length=16, blank=True, default="")
     email2 = models.CharField('alternate email', max_length=16, blank=True, default="")
+    country = models.CharField('country', max_length=16, blank=True, default="")
+    timezone = models.CharField('timezone', max_length=16, blank=True, default="")
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     use_nominee = models.BooleanField(default=False)
@@ -59,6 +61,8 @@ class User(AbstractBaseUser):
     nominee_phone2 = models.CharField('nominee alternate phone number', max_length=16, blank=True, default="")
     nominee_email = models.CharField('nominee email', max_length=16, blank=True, default="")
     nominee_email2 = models.CharField('nominee alternate email', max_length=16, blank=True, default="")
+    nominee_country = models.CharField('nominee_country', max_length=16, blank=True, default="")
+    nominee_timezone = models.CharField('nominee_timezone', max_length=16, blank=True, default="")
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

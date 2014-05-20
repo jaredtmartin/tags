@@ -34,15 +34,22 @@
       </form>
     </div>
   </div>
-  <div class="row">
+  <div class="row ">
     <div class="col-md-6 col-md-offset-3 ">
-      <h3>History</h3>
+      <a class="show-hide-history" onclick="$('.history-section').toggle(); return false;" href="#">Show History</a>
     </div>
   </div>
-  <div id="events">
-    {% for event in object.events.all %}
-      {% include 'tags/event.html' %}
-    {% endfor %}
+  <div class="history-section" style="display:none;">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 ">
+        <h3>History</h3>
+      </div>
+    </div>
+    <div id="events">
+      {% for event in object.events.all %}
+        {% include 'tags/event.html' %}
+      {% endfor %}
+    </div>
   </div>
   <div id="ajax-data" style="display: none;"></div>
 {% endblock content %}
@@ -97,7 +104,7 @@
     });
     $(document).on("click", "#rewardTagModal", function(e) {
       bootbox.prompt({
-        title: "What will you offer as a reward if this item is found?",
+        title: "How much will you offer as a reward if this item is found? Please specify in INR",
         value: $('#tag_reward').html(),
         callback: function(result) {
           if (result != null) {

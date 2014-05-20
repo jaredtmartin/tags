@@ -108,7 +108,7 @@ class ListTags(FilterMixin, MessageMixin, LoginRequiredMixin, vanilla.ListView):
   def filter_owner(self, qs, value):
     return qs.filter(owner=self.request.user)
 
-class EditTag(LoginRequiredMixin, vanilla.UpdateView):
+class EditTag(MessageMixin, LoginRequiredMixin, vanilla.UpdateView):
   model = Tag
   # We only use the GET, POST is done via AJAX
   def post(self, request, *args, **kwargs):
@@ -265,7 +265,7 @@ class RegisterTag(FormView):
   success_message = "Your new tag has been registered successfully."
   def form_valid(self, form):
     code = form.cleaned_data['code']
-    tag = Tag.objects.create(owner=self.request.user, code=code, name="New Tag")
+    tag = Tag.objects.create(owner=self.request.user, code=code, name="New Tag", retailer=code.retailer)
     Event.objects.create(tag=tag, tipo='Registered', details="", owner = tag.owner)
     code.delete()
     messages.success(self.request, self.success_message)

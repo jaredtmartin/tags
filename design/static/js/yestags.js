@@ -4,7 +4,6 @@ function saveDataInCache(data){
 }
 function updateMessages(data){
   $('.message:visible').remove();
-  $('.event:visible').remove();
   $('.message', d).appendTo($('#messages'));
   $('.event', d).appendTo($('#events'));
 }

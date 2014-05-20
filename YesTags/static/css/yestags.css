@@ -9,7 +9,7 @@
   width:75%;
   margin-left:15px;
 }
-.event a{
+.event-message a{
   color: #B94A48;
   font-weight: normal;
 }
@@ -306,7 +306,7 @@ h1.page-title {
   float: none;
 }
 .navbar.navbar-thin .nav > li > a {
-  padding: 11px 20px;
+  padding: 11px 10px;
 }
 .navbar.navbar-thin .navbar-brand {
   padding: 0 17px;

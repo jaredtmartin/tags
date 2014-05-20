@@ -145,7 +145,7 @@ class UserForm(ModelForm):
   class Meta:
     model = User
     fields = ('first_name','last_name','email', 'street','city','state','phone', 'email2', 'phone2','use_nominee', 'nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
-        'nominee_state', 'nominee_phone', 'nominee_phone2')
+        'nominee_state', 'nominee_phone', 'nominee_phone2', 'country', 'timezone', 'nominee_country', 'nominee_timezone')
   first_name = forms.CharField(label="First Name", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'First Name','class':'form-control'}))
   last_name = forms.CharField(label="Last Name", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Last Name','class':'form-control'}))
   email = forms.CharField(label="Email Address", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Email Address','class':'form-control'}))
@@ -155,6 +155,14 @@ class UserForm(ModelForm):
   state = forms.CharField(label="State", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'State','class':'form-control'}))
   phone = forms.CharField(label="Phone", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Phone','class':'form-control'}))
   phone2 = forms.CharField(label="Second Phone", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Second Phone','class':'form-control'}))
+
+  country = forms.CharField(label="Country", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Country','class':'form-control'}))
+  timezone = forms.CharField(label="Timezone", required=False, max_length=30, initial="IST", widget=widgets.TextInput(attrs={'placeholder':'Timezone','class':'form-control'}))
+  nominee_country = forms.CharField(label="Country", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Country','class':'form-control'}))
+  nominee_timezone = forms.CharField(label="Timezone", required=False, max_length=30, initial="IST", widget=widgets.TextInput(attrs={'placeholder':'Timezone','class':'form-control'}))
+
+
+
 
   use_nominee = forms.BooleanField(label="Use Nominee", required=False, widget=widgets.CheckboxInput(attrs={'placeholder':'Use Nominee','data-toggle':"checkbox"}))
   nominee_first_name = forms.CharField(label="First Name", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'First Name','class':'form-control'}))
