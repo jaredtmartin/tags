@@ -2,13 +2,13 @@
 {% block content %}
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2 page-header">
-			<h1>Your registered clients</h1>
+			<h1>Your registered customers</h1>
 		</div>
 	</div>
 	{% if not object_list %}
 		<div class="row">
 			<div class="col-md-6 col-md-offset-3">
-				None of your clients have registered Yes Tags yet.
+				None of your customers have registered Yes Tags yet.
 			</div>
 		</div>
 	{% endif %}
@@ -20,8 +20,11 @@
 			<div class="col-md-2">
 				{{client.user.phone}} {% if client.user.phone2 %}/ {{client.user.phone2}}{% endif %}
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-2">
 				{{client.user.email}} {% if client.user.phone2 %}/ {{client.user.email2}}{% endif %}
+			</div>
+			<div class="col-md-2">
+				{{client.created_at}}
 			</div>
 		</div>
 	{% endfor %}
