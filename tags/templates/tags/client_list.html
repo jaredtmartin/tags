@@ -19,13 +19,17 @@
 			</div>
 			<div class="col-md-2">
 				{{client.user.phone}} {% if client.user.phone2 %}/ {{client.user.phone2}}{% endif %}
+				{{client.created_at}}
 			</div>
 			<div class="col-md-2">
 				{{client.user.email}} {% if client.user.email2 %}/ {{client.user.email2}}{% endif %}
 			</div>
-			<div class="col-md-2">
-				{{client.created_at}}
-			</div>
+			{% if client.user.street %}
+				<div class="col-md-2">
+					{{client.user.street}}, {{client.user.city}}
+					{{client.user.state}}, {{client.user.country}}
+				</div>
+			{% endif %}
 		</div>
 	{% endfor %}
 {% endblock content %}
