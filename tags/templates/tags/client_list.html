@@ -1,0 +1,31 @@
+{% extends "design/header.html" %}
+{% block content %}
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2 page-header">
+			<h1>Your registered clients</h1>
+		</div>
+	</div>
+	{% if not object_list %}
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				None of your clients have registered Yes Tags yet.
+			</div>
+		</div>
+	{% endif %}
+	{% for client in object_list %}
+		<div class="row">
+			<div class="col-md-2 col-md-offset-2">
+				{{client.user.first_name}} {{client.user.last_name}}
+			</div>
+			<div class="col-md-2">
+				{{client.user.phone}} {% if client.user.phone2 %}/ {{client.user.phone2}}{% endif %}
+			</div>
+			<div class="col-md-4">
+				{{client.user.email}} {% if client.user.phone2 %}/ {{client.user.email2}}{% endif %}
+			</div>
+		</div>
+	{% endfor %}
+{% endblock content %}
+{% block blockname %}
+	<li class="active"><a href="#">Back to Home</a></li>
+{% endblock blockname %}

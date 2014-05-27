@@ -1,10 +1,10 @@
 from django.conf.urls import *
-from views import UserUpdateView, SignUp, SignUpDone, SignUpConfirm, SignUpComplete
+from views import UserUpdateView, SignUp, SignUpDone, SignUpConfirm, SignUpComplete, YesTagsLoginView as LoginView
 from forms import LoginForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
 
 urlpatterns = patterns('',
   url(r'^settings/$', UserUpdateView.as_view(), name="user_profile"),
-  url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'authentication/login.html','authentication_form':LoginForm}, name='login'),
+  url(r'^login/$', LoginView.as_view(), name='login'),
   url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name': 'authentication/logged_out.html'}, name='logout'),
   url(r'^password_change/$', 'django.contrib.auth.views.password_change', {'template_name': 'authentication/password_change_form.html', 'password_change_form':PasswordChangeForm}, name='change_password'),
   url(r'^password_change/done/$', 'django.contrib.auth.views.password_change_done', {'template_name': 'authentication/password_change_done.html'}, name='password_change_done'),

@@ -1,6 +1,7 @@
 import vanilla
 from django.conf import settings
-from tags.models import Tag, Event
+from tags.models import Tag, Event, Client
+from authentication.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from tags.forms import TagNameForm, TagImageForm, SearchForm, ReportContactForm, RegisterCodeForm, TagRewardForm
@@ -267,6 +268,7 @@ class RegisterTag(FormView):
     code = form.cleaned_data['code']
     tag = Tag.objects.create(owner=self.request.user, code=code, name="New Tag", retailer=code.retailer)
     Event.objects.create(tag=tag, tipo='Registered', details="", owner = tag.owner)
+    client, created = Client.objects.get_or_create(user=self.request.user, retailer = tag.retailer)
     code.delete()
     messages.success(self.request, self.success_message)
     return HttpResponseRedirect(reverse('edit_tag', kwargs={'pk':tag.pk}))
@@ -288,3 +290,9 @@ class DismissEvent(vanilla.UpdateView):
     self.object.viewed = True
     self.object.save()
     return self.render_to_response({})
+
+class ListClients(FilterMixin, MessageMixin, LoginRequiredMixin, vanilla.ListView):
+  model = Client
+  filter_on=['retailer']
+  def filter_retailer(self, qs, value):
+    return qs.filter(retailer__user=self.request.user)

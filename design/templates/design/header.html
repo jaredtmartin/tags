@@ -9,14 +9,18 @@
             <div class="nav-collapse collapse in" id="nav-collapse-01">
               <ul class="nav">
                 <li class="logo-cell"><a href="#fakelink" class="navbar-brand"><img src="{{STATIC_URL}}img/YesTagsLogo.png"></a></li>
-                <li><a href="{% url "home" %}">Home</a></li>
-                <li><a href="#">Store</a></li>
-                <li><a href="{% url "howitworks" %}">How it Works</a></li>
-                {% if user.is_authenticated %} 
-                  <li><a href="{% url "list_tags" %}">Yes Tagged Items</a></li>
+                {% if user.is_retailer %}
+                  <li><a href="{% url "list_clients" %}">Clients</a></li>
+                {% else %}
+                  <li><a href="{% url "home" %}">Home</a></li>
+                  <li><a href="#">Store</a></li>
+                  <li><a href="{% url "howitworks" %}">How it Works</a></li>
+                  {% if user.is_authenticated %} 
+                    <li><a href="{% url "list_tags" %}">Yes Tagged Items</a></li>
+                  {% endif %}
+                  <li><a href=" {% url "search" %} ">Search</a></li>
+                  <li><a href="{% url "register" %}">Register a Tag</a></li>
                 {% endif %}
-                <li><a href=" {% url "search" %} ">Search</a></li>
-                <li><a href="{% url "register" %}">Register a Tag</a></li>
                 {% if user.is_authenticated %}
                   <li>
                     <a href="#">Welcome, {{user.full_name}}</a>

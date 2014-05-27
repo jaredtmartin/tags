@@ -1,6 +1,7 @@
 from django.db import models
 from thumbs.fields import ImageWithThumbsField
 from django.conf import settings
+from authentication.models import User
 import random
 
 CODE_LENGTH = 8
@@ -8,6 +9,7 @@ CODE_LENGTH = 8
 class Retailer(models.Model):
   name = models.CharField(max_length=64)
   email = models.CharField(max_length=64)
+  user = models.OneToOneField(User)
   def __unicode__(self): return self.name
 
 class Tag(models.Model):
@@ -45,3 +47,8 @@ class Event(models.Model):
   phone = models.CharField(max_length=64)
   reward = models.CharField(max_length=64)
   def __unicode__(self): return self.tag.name + ' ' + self.tipo
+
+class Client(models.Model):
+  retailer = models.ForeignKey(Retailer, related_name='clients')
+  user = models.OneToOneField(User)
+  created_at = models.DateTimeField(auto_now_add=True)

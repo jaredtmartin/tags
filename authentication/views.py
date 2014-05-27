@@ -142,3 +142,61 @@ class UserUpdateView(UpdateView):
       return self.form_valid(form)
     else:
       return self.form_invalid(form)
+
+# These imports are for LoginView
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.cache import never_cache
+from django.utils.decorators import method_decorator
+from django.contrib.auth import REDIRECT_FIELD_NAME, login
+from forms import LoginForm
+
+class LoginView(vanilla.FormView):
+  redirect_field_name = REDIRECT_FIELD_NAME
+  template_name = 'authentication/login.html'
+  form_class = LoginForm
+  success_url = settings.LOGIN_REDIRECT_URL
+
+  @method_decorator(csrf_protect)
+  @method_decorator(never_cache)
+  def dispatch(self, *args, **kwargs):
+    return super(LoginView, self).dispatch(*args, **kwargs)
+
+  def form_valid(self, form):
+    """
+    The user has provided valid credentials (this was checked in AuthenticationForm.is_valid()). So now we
+    can check the test cookie stuff and log him in.
+    """
+    self.check_and_delete_test_cookie()
+    login(self.request, form.get_user())
+    return super(LoginView, self).form_valid(form)
+
+  def form_invalid(self, form):
+    """
+    The user has provided invalid credentials (this was checked in AuthenticationForm.is_valid()). So now we
+    set the test cookie again and re-render the form with errors.
+    """
+    self.set_test_cookie()
+    return super(LoginView, self).form_invalid(form)
+
+  def get_success_url(self): return self.success_url
+
+  def set_test_cookie(self):
+    self.request.session.set_test_cookie()
+
+  def check_and_delete_test_cookie(self):
+    if self.request.session.test_cookie_worked():
+      self.request.session.delete_test_cookie()
+      return True
+    return False
+
+  def get(self, request, *args, **kwargs):
+    """
+    Same as django.views.generic.edit.ProcessFormView.get(), but adds test cookie stuff
+    """
+    self.set_test_cookie()
+    return super(LoginView, self).get(request, *args, **kwargs)
+
+class YesTagsLoginView(LoginView):
+  def get_success_url(self): 
+    if self.request.user.is_retailer: return reverse('list_clients')
+    return self.success_url
