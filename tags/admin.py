@@ -45,4 +45,5 @@ class RetailerAdmin(admin.ModelAdmin):
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Code)
 admin.site.register(Event)
+admin.site.register(Client)
 admin.site.register(Retailer, RetailerAdmin)
