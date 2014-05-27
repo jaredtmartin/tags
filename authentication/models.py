@@ -46,7 +46,7 @@ class User(AbstractBaseUser):
     state = models.CharField('state', max_length=32, blank=True, default="")
     phone = models.CharField('phone number', max_length=16, blank=True, default="")
     phone2 = models.CharField('alternate phone number', max_length=16, blank=True, default="")
-    email2 = models.CharField('alternate email', max_length=255, blank=True, unique=True, default="")
+    email2 = models.CharField('alternate email', max_length=255, blank=True, default="")
     country = models.CharField('country', max_length=16, blank=True, default="")
     timezone = models.CharField('timezone', max_length=16, blank=True, default="")
     is_active = models.BooleanField(default=True)
