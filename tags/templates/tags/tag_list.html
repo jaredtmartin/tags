@@ -15,7 +15,7 @@
 	{% for tag in object_list %}
 		<div class="row">
 			<div class="col-md-3 col-md-offset-3">
-				<img src="{% if object.image %}{{tag.image.url_200x150}}{% else %}{{STATIC_URL}}img/small-sample.gif{% endif %}">
+				<img src="{% if tag.image %}{{tag.image.url_200x150}}{% else %}{{STATIC_URL}}img/small-sample.gif{% endif %}">
 			</div>
 			<div class="tag-list-name col-md-3">
 				<a class="lead" href="{% url "edit_tag" tag.pk %}">{{tag}}</a>
