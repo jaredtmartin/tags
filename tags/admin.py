@@ -1,5 +1,5 @@
 from django.contrib import admin
-from tags.models import Tag, Code, Event, Retailer
+from tags.models import Tag, Code, Event, Retailer, Client
 
 
 from django.utils.html import format_html
