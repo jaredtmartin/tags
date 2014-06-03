@@ -189,7 +189,7 @@ div.video-block {
   background-color:  #F1C40F;
 }
 div.compatible img{
- margin-top:110px;
+ /*margin-top:110px;*/
 }
 div.compatible .recommend img{
  margin-top:0;
@@ -230,7 +230,7 @@ div.international h1.lead{
   margin-top: 0;
 }
 div.international-block{
-  background-color: rgba(255,255,255,0.7);
+  background-color: rgba(255,255,255,0.9);
   border-radius: 6px;
   height:460px;
   margin:20px;
@@ -245,8 +245,15 @@ div.lifetime {
   color: white;
   /*height: 370px;*/
 }
-div.lifetime h1.lead{
+div.lifetime-block{
+  background-color: rgba(44,44,46,0.8);
+  border-radius: 6px;
+  padding:10px;
   margin-top: 30px;
+  height:420px;
+}
+div.lifetime h1.lead{
+  margin-top: 0;
 }
 div.instant {
   background: white url('/static/img/landing/city.png') no-repeat border-box center;
@@ -260,9 +267,10 @@ div.instant h1.lead{
 }*/
 div.guarantee h1.lead{
   margin-top: 30px;
+  text-align: right;
 }
 div.guarantee img{
-  margin-top:150px;
+  /*margin-top:150px;*/
 }
 div.guarantee .recommend img{
   margin-top:0;
