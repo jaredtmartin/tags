@@ -50,7 +50,7 @@ class User(AbstractBaseUser):
     country = models.CharField('country', max_length=16, blank=True, default="")
     timezone = models.CharField('timezone', max_length=16, blank=True, default="")
     security_question = models.CharField('Security Question', max_length=255, blank=True, default="")
-    security_response = models.CharField('Security Response', max_length=16, blank=True, default="")
+    security_response = models.CharField('Security Response', max_length=255, blank=True, default="")
     dob = models.CharField('Date of Birth', max_length=16, blank=True, default="")
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
