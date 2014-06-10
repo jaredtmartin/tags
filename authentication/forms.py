@@ -144,8 +144,10 @@ def get_timezone_choices():
 class UserForm(ModelForm):
   class Meta:
     model = User
-    fields = ('first_name','last_name','email', 'street','city','state','phone', 'email2', 'phone2','use_nominee', 'nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
-        'nominee_state', 'nominee_phone', 'nominee_phone2', 'country', 'timezone', 'nominee_country', 'nominee_timezone')
+    fields = ('first_name','last_name','email', 'street','city','state','phone', 'email2', 'phone2',
+      'use_nominee', 'nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 
+      'nominee_street', 'nominee_city', 'nominee_state', 'nominee_phone', 'nominee_phone2', 'country', 
+      'timezone', 'nominee_country', 'nominee_timezone', 'security_question','security_response','dob')
   first_name = forms.CharField(label="First Name", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'First Name','class':'form-control'}))
   last_name = forms.CharField(label="Last Name", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Last Name','class':'form-control'}))
   email = forms.CharField(label="Email Address", max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Email Address','class':'form-control'}))
@@ -160,7 +162,9 @@ class UserForm(ModelForm):
   timezone = forms.CharField(label="Timezone", required=False, max_length=30, initial="IST", widget=widgets.TextInput(attrs={'placeholder':'Timezone','class':'form-control'}))
   nominee_country = forms.CharField(label="Country", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Country','class':'form-control'}))
   nominee_timezone = forms.CharField(label="Timezone", required=False, max_length=30, initial="IST", widget=widgets.TextInput(attrs={'placeholder':'Timezone','class':'form-control'}))
-
+  security_question = forms.CharField(label="Security Question", required=True, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Security Question','class':'form-control'}))
+  security_response = forms.CharField(label="Response", required=True, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Response','class':'form-control'}))
+  dob = forms.CharField(label="Date of Birth", required=False, max_length=30, widget=widgets.TextInput(attrs={'placeholder':'Date of Birth','class':'form-control'}))
 
 
 
