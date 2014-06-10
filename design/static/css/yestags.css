@@ -33,12 +33,18 @@
   margin-left:0;
   margin-right:0;
 }
-.search-now p{
-  font-size: 1.5em;
+.search-now{
+  margin-top: 10px;
+  /*font-size: 1.5em;*/
 }
 .search-now input.form-control{
   width:70%;
   display:inline;
+  /*margin-left: 20px;*/
+}
+.search-now button{
+
+  margin-left: 10px;
 }
 .report-tag-call{
   text-align: right;
