@@ -4,7 +4,8 @@ from tags.models import Tag, Event, Client
 from authentication.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from tags.forms import TagNameForm, TagImageForm, SearchForm, ReportContactForm, RegisterCodeForm, TagRewardForm
+from tags.forms import TagNameForm, TagImageForm, SearchForm, ReportContactForm, RegisterCodeForm, \
+  TagRewardForm, SMSFoundForm
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
@@ -12,7 +13,14 @@ from django.template import Context, loader
 from django.utils.http import int_to_base36
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.views.generic import View
+from django.core.urlresolvers import reverse_lazy
 
+def get_found_message(name, phone, email=''):
+  msg='by: '+name
+  if phone: msg += ' '+phone
+  if email: msg += ' '+email
+  return msg
 class LoginRequiredMixin(object):
   u"""Ensures that user must be authenticated in order to access view."""
   @method_decorator(login_required)
@@ -190,16 +198,17 @@ class EmailMixin(object):
   email_template_name = "email_template.html"
   def get_form(self, data=None, files=None, **kwargs):
     # Our form is not really a model form, so we'll drop the instance
-    del kwargs['instance']
+    if 'instance' in kwargs: del kwargs['instance']
     return super(EmailMixin, self).get_form(data=data, files=files, **kwargs)
-  def send_email(self, user, subject, domain_override=None, use_https=False, context={}):
+  def send_email(self, user, subject, domain_override=None, use_https=False, context={}, template=None):
     if not domain_override:
       current_site = Site.objects.get_current()
       site_name = current_site.name
       domain = current_site.domain
     else:
       site_name = domain = domain_override
-    template = loader.get_template(self.email_template_name)
+    if not subject: subject = "Confirmation link sent on %s" % site_name
+    if not template: template = loader.get_template(self.email_template_name)
     context.update({
       'domain': domain,
       'site_name': site_name,
@@ -207,8 +216,7 @@ class EmailMixin(object):
       'user': user,
       'protocol': use_https and 'https' or 'http',
       })
-    send_mail("Confirmation link sent on %s" % site_name,
-              template.render(Context(context)), settings.EMAIL_HOST_USER, [user.email])
+    send_mail(subject, template.render(Context(context)), settings.EMAIL_HOST_USER, [user.email])
 
 class ReportTag(EmailMixin, UpdateView):
   model = Tag
@@ -236,9 +244,7 @@ class ReportTag(EmailMixin, UpdateView):
         return self.form_valid(form)
       return self.form_invalid(form)
   def form_valid(self, form):
-    msg='by: '+form.cleaned_data['name']
-    if form.cleaned_data['phone']: msg += ' '+form.cleaned_data['phone']
-    if form.cleaned_data['email']: msg += ' '+form.cleaned_data['email']
+    msg = get_found_message(form.cleaned_data['name'], form.cleaned_data['phone'], form.cleaned_data['email'])
     Event.objects.create(
       tag = self.object, 
       tipo = 'Found', 
@@ -295,4 +301,46 @@ class ListClients(FilterMixin, MessageMixin, LoginRequiredMixin, vanilla.ListVie
   model = Client
   filter_on=['retailer']
   def filter_retailer(self, qs, value):
-    return qs.filter(retailer__user=self.request.user)
+    return qs.filter(retailer__user = self.request.user)
+
+class SMSFound(vanilla.FormView):
+  model = Tag
+  form_class = SMSFoundForm
+  template_name = 'tags/SMSFoundForm.html'
+  email_template_name = "tags/report_email.html"
+  success_url = reverse_lazy('list_tags')
+  def post(self, request):
+    self.request = request
+    form = self.get_form(data=request.POST, files=request.FILES)
+    if form.is_valid(): return self.form_valid(form)
+    return self.form_invalid(form)
+  def form_valid(self, form):
+    self.object = form.cleaned_data['tag']
+    msg = get_found_message('Someone', form.cleaned_data['number'])
+    Event.objects.create(
+      tag = self.object,
+      tipo = 'Found', 
+      details = msg, 
+      name = 'Someone',
+      email = '',
+      phone = form.cleaned_data['number'],
+      owner = self.object.owner,
+      reward = self.object.reward
+    )
+    template = loader.get_template('tags/SMSFoundEmail.html')
+    send_mail("Tag Located!", 
+      template.render(Context({
+        'object':self.object,
+        'phone':form.cleaned_data['number']
+      })), settings.EMAIL_HOST_USER, [self.object.owner.email])
+
+    return HttpResponseRedirect(self.get_success_url())
+  def form_invalid(self, form):
+    template = loader.get_template('tags/SMSIncomplete.html')
+    send_mail("Incomplete SMS recieved", 
+      template.render(Context({
+        'message':self.request.POST['tag'],
+        'number':form.cleaned_data['number']
+      })), settings.EMAIL_HOST_USER, ['jaredtmartin@gmail.com'])
+    context = self.get_context_data(form=form)
+    return self.render_to_response(context)

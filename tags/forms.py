@@ -39,4 +39,13 @@ class ReportContactForm(forms.Form):
       raise forms.ValidationError("You must enter at least one form of contact information for the owner to contact you.")
     # Always return the full collection of cleaned data.
     return cleaned_data
+    
+class SMSFoundForm(forms.Form):
+  number = forms.CharField()
+  tag = forms.CharField()
+  def clean_tag(self):
+    data = self.cleaned_data['tag']
+    try: return Tag.objects.get(code=self.cleaned_data['tag'])
+    except Tag.DoesNotExist: raise forms.ValidationError("Tag not found.")
+    return data
 
