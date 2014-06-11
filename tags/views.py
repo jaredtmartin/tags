@@ -310,8 +310,13 @@ class SMSFound(vanilla.FormView):
   email_template_name = "tags/report_email.html"
   success_url = reverse_lazy('list_tags')
   def post(self, request):
-    self.request = request
-    form = self.get_form(data=request.POST, files=request.FILES)
+    self.data = request.POST
+    return self.process_form()
+  def get(self, request, *args, **kwargs):
+    self.data = request.GET
+    return self.process_form()
+  def process_form(self):
+    form = self.get_form(data=self.data)
     if form.is_valid(): return self.form_valid(form)
     return self.form_invalid(form)
   def form_valid(self, form):
@@ -339,8 +344,8 @@ class SMSFound(vanilla.FormView):
     template = loader.get_template('tags/SMSIncomplete.html')
     send_mail("Incomplete SMS recieved", 
       template.render(Context({
-        'message':self.request.POST['tag'],
-        'number':form.cleaned_data['number']
+        'message':self.data['tag'],
+        'number':self.data['number']
       })), settings.EMAIL_HOST_USER, ['jaredtmartin@gmail.com'])
     context = self.get_context_data(form=form)
     return self.render_to_response(context)
