@@ -1,0 +1,9 @@
+{% autoescape off %}
+YesTag {{tag.code}} belonging to {{tag.owner.name}} has been found.
+It was found by someone with the following contact info:
+	Name:{{name}}
+	Phone:{{phone}}
+	Email:{{email}}
+
+The owner will be notified at his phone {{tag.owner.phone}} and email {{tag.owner.email}}
+{% endautoescape %}
