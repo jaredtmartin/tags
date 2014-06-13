@@ -3,6 +3,7 @@ from thumbs.fields import ImageWithThumbsField
 from django.conf import settings
 from authentication.models import User
 import random
+from django.template import Context, loader
 
 CODE_LENGTH = 8
 
@@ -47,6 +48,42 @@ class Event(models.Model):
   phone = models.CharField(max_length=64)
   reward = models.CharField(max_length=64)
   def __unicode__(self): return self.tag.name + ' ' + self.tipo
+  def send_notifications(self):
+    self.send_email_notification()
+    self.send_sms_notification_to_owner()
+  def send_email_notification(self):
+    template = loader.get_template('tags/tag_found_email.html')
+    admin_template = loader.get_template('tags/tag_found_admin_email.html')
+    context = Context({
+      'tag':self.tag,
+      'name':self.name,
+      'email':self.email,
+      'phone':self.phone,
+      'reward':self.reward,
+    })
+    send_mail("YesTag Located!", template.render(context), settings.EMAIL_HOST_USER, [self.tag.owner.email])
+    send_mail("YesTag Located!", admin_template.render(context), settings.EMAIL_HOST_USER, [self.tag.owner.email])
+  def send_sms_notification(self):
+    import urllib2
+    import urllib
+    template = loader.get_template('tags/tag_found_sms.html')
+    context = Context({
+      'tag':self.tag,
+      'name':self.name,
+      'email':self.email,
+      'phone':self.phone,
+    })
+    data = {
+      'uid':'4d616a65656d', 
+      'pin':'538d54bf7c684',
+      'route':0,
+      'mobile':self.tag.owner.phone,
+      'message':template.render(context),
+    }
+    url_values = urllib.urlencode(data)
+    url = 'http://smsapp.ideations4.com/api/sms.php'
+    full_url = url + '?' + url_values
+    data = urllib2.urlopen(full_url)
 
 class Client(models.Model):
   retailer = models.ForeignKey(Retailer, related_name='clients')

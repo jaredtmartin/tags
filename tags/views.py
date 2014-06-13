@@ -16,11 +16,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 from django.core.urlresolvers import reverse_lazy
 
-def get_found_message(name, phone, email=''):
-  msg='by: '+name
-  if phone: msg += ' '+phone
-  if email: msg += ' '+email
-  return msg
 class LoginRequiredMixin(object):
   u"""Ensures that user must be authenticated in order to access view."""
   @method_decorator(login_required)
@@ -228,14 +223,17 @@ class ReportTag(EmailMixin, UpdateView):
   def post(self, request, *args, **kwargs):
     self.object = self.get_object()
     if request.user.is_authenticated():
-      self.send_email(self.object.owner, "Tag Located!", 
-        context={
-          'object':self.object,
-          'name':request.user.get_full_name(),
-          'email':request.user.email,
-          'phone':request.user.phone
-        }
+      event = Event.objects.create(
+        tag = self.object, 
+        tipo = 'Found', 
+        details = msg, 
+        name = request.user.get_full_name(),
+        email = request.user.email,
+        phone = request.user.phone,
+        owner = self.object.owner,
+        reward = self.object.reward
       )
+      event.send_notifications()
       messages.success(self.request, self.success_message)
       return HttpResponseRedirect(reverse("list_tags"))
     else:  
@@ -245,7 +243,7 @@ class ReportTag(EmailMixin, UpdateView):
       return self.form_invalid(form)
   def form_valid(self, form):
     msg = get_found_message(form.cleaned_data['name'], form.cleaned_data['phone'], form.cleaned_data['email'])
-    Event.objects.create(
+    event = Event.objects.create(
       tag = self.object, 
       tipo = 'Found', 
       details = msg, 
@@ -255,14 +253,7 @@ class ReportTag(EmailMixin, UpdateView):
       owner = self.object.owner,
       reward = self.object.reward
     )
-    self.send_email(self.object.owner, "Tag Located!",
-      context={
-        'object':self.object,
-        'name':form.cleaned_data['name'],
-        'email':form.cleaned_data['email'],
-        'phone':form.cleaned_data['phone']
-      }
-    )
+    event.send_notifications()
     messages.success(self.request, self.success_message)
     return HttpResponseRedirect(reverse("search"))
 
@@ -322,7 +313,7 @@ class SMSFound(vanilla.FormView):
   def form_valid(self, form):
     self.object = form.cleaned_data['tag']
     msg = get_found_message('Someone', form.cleaned_data['number'])
-    Event.objects.create(
+    event = Event.objects.create(
       tag = self.object,
       tipo = 'Found', 
       details = msg, 
@@ -332,13 +323,7 @@ class SMSFound(vanilla.FormView):
       owner = self.object.owner,
       reward = self.object.reward
     )
-    template = loader.get_template('tags/SMSFoundEmail.html')
-    send_mail("Tag Located!", 
-      template.render(Context({
-        'object':self.object,
-        'phone':form.cleaned_data['number']
-      })), settings.EMAIL_HOST_USER, [self.object.owner.email])
-
+    event.send_notifications()
     return HttpResponseRedirect(self.get_success_url())
   def form_invalid(self, form):
     template = loader.get_template('tags/SMSIncomplete.html')
