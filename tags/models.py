@@ -49,8 +49,8 @@ class Event(models.Model):
   reward = models.CharField(max_length=64)
   def __unicode__(self): return self.tag.name + ' ' + self.tipo
   def send_notifications(self):
-    self.send_email_notification()
-    self.send_sms_notification_to_owner()
+    if self.tag.owner.email: send_email_notification()
+    if self.tag.owner.phone: self.send_sms_notification_to_owner()
   def send_email_notification(self):
     template = loader.get_template('tags/tag_found_email.html')
     admin_template = loader.get_template('tags/tag_found_admin_email.html')
