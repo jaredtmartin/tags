@@ -15,7 +15,11 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 from django.core.urlresolvers import reverse_lazy
-
+def get_found_message(self, name, phone, email=''):
+  msg='by: '+name
+  if phone: msg += ' '+phone
+  if email: msg += ' '+email
+  return msg
 class LoginRequiredMixin(object):
   u"""Ensures that user must be authenticated in order to access view."""
   @method_decorator(login_required)
