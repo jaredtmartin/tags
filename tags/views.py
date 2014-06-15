@@ -15,11 +15,12 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 from django.core.urlresolvers import reverse_lazy
-def get_found_message(self, name, phone, email=''):
-  msg='by: '+name
-  if phone: msg += ' '+phone
-  if email: msg += ' '+email
-  return msg
+class FoundMixin(object):
+  def get_found_message(self, name, phone, email=''):
+    msg='by: '+name
+    if phone: msg += ' '+phone
+    if email: msg += ' '+email
+    return msg
 class LoginRequiredMixin(object):
   u"""Ensures that user must be authenticated in order to access view."""
   @method_decorator(login_required)
@@ -217,7 +218,7 @@ class EmailMixin(object):
       })
     send_mail(subject, template.render(Context(context)), settings.EMAIL_HOST_USER, [user.email])
 
-class ReportTag(EmailMixin, UpdateView):
+class ReportTag(FoundMixin, EmailMixin, UpdateView):
   model = Tag
   template_name="tags/report_contact_form.html"
   form_class = ReportContactForm
@@ -227,7 +228,7 @@ class ReportTag(EmailMixin, UpdateView):
   def post(self, request, *args, **kwargs):
     self.object = self.get_object()
     if request.user.is_authenticated():
-      msg = get_found_message(request.user.get_full_name(), request.user.phone, request.user.email)
+      msg = self.get_found_message(request.user.get_full_name(), request.user.phone, request.user.email)
       event = Event.objects.create(
         tag = self.object, 
         tipo = 'Found', 
@@ -247,7 +248,7 @@ class ReportTag(EmailMixin, UpdateView):
         return self.form_valid(form)
       return self.form_invalid(form)
   def form_valid(self, form):
-    msg = get_found_message(form.cleaned_data['name'], form.cleaned_data['phone'], form.cleaned_data['email'])
+    msg = self.get_found_message(form.cleaned_data['name'], form.cleaned_data['phone'], form.cleaned_data['email'])
     event = Event.objects.create(
       tag = self.object, 
       tipo = 'Found', 
@@ -299,7 +300,7 @@ class ListClients(FilterMixin, MessageMixin, LoginRequiredMixin, vanilla.ListVie
   def filter_retailer(self, qs, value):
     return qs.filter(retailer__user = self.request.user)
 
-class SMSFound(vanilla.FormView):
+class SMSFound(FoundMixin, vanilla.FormView):
   model = Tag
   form_class = SMSFoundForm
   template_name = 'tags/SMSFoundForm.html'
@@ -317,7 +318,7 @@ class SMSFound(vanilla.FormView):
     return self.form_invalid(form)
   def form_valid(self, form):
     self.object = form.cleaned_data['tag']
-    msg = get_found_message('Someone', form.cleaned_data['number'])
+    msg = self.get_found_message('Someone', form.cleaned_data['number'])
     event = Event.objects.create(
       tag = self.object,
       tipo = 'Found', 
