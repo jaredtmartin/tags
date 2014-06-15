@@ -4,6 +4,7 @@ from django.conf import settings
 from authentication.models import User
 import random
 from django.template import Context, loader
+from django.core.mail import send_mail
 
 CODE_LENGTH = 8
 
