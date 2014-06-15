@@ -223,6 +223,7 @@ class ReportTag(EmailMixin, UpdateView):
   def post(self, request, *args, **kwargs):
     self.object = self.get_object()
     if request.user.is_authenticated():
+      msg = get_found_message(request.user.get_full_name(), request.user.phone, request.user.email)
       event = Event.objects.create(
         tag = self.object, 
         tipo = 'Found', 
