@@ -51,7 +51,7 @@ class Event(models.Model):
   def __unicode__(self): return self.tag.name + ' ' + self.tipo
   def send_notifications(self):
     if self.tag.owner.email: self.send_email_notification()
-    if self.tag.owner.phone: self.send_sms_notification_to_owner()
+    if self.tag.owner.phone: self.send_sms_notification()
   def send_email_notification(self):
     template = loader.get_template('tags/tag_found_email.html')
     admin_template = loader.get_template('tags/tag_found_admin_email.html')
