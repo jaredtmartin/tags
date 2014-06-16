@@ -77,9 +77,12 @@ class Event(models.Model):
     data = {
       'uid':'4d616a65656d', 
       'pin':'538d54bf7c684',
-      'route':0,
+      'route':5,
       'mobile':self.tag.owner.phone,
       'message':template.render(context),
+      'sender'='YESTAG',
+      'pushid'=1,
+      'tempid'=16110,
     }
     url_values = urllib.urlencode(data)
     url = 'http://smsapp.ideations4.com/api/sms.php'
