@@ -5,7 +5,7 @@ from authentication.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from tags.forms import TagNameForm, TagImageForm, SearchForm, ReportContactForm, RegisterCodeForm, \
-  TagRewardForm, SMSFoundForm
+  TagRewardForm, SMSFoundForm, RegisterSMSCodeForm
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.sites.models import Site
@@ -15,6 +15,40 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 from django.core.urlresolvers import reverse_lazy
+import urllib2
+import urllib
+class Notifier(object):
+  SMS_TEMPLATES = {
+    'not_found':{'id':'16125','filename':'tags/tag_not_found_sms.html'},
+    'found':{'id':'16126','filename':'tags/tag_found_sms.html'},
+    'not_registered':{'id':'16123','filename':'tags/tag_not_registered.html'},
+    'registered':{'id':'16122','filename':'tags/tag_registered.html'},
+    'registered_new':{'id':'16121','filename':'tags/tag_registered_new.html'},
+    'thanks':{'id':'16124', 'filename':'tags/tag_found_thankyou_sms.html'}
+  }
+  ADMIN_EMAIL='jaredtmartin@gmail.com'
+  def sendSMS(self, number, template_id, context):
+    template = loader.get_template(self.SMS_TEMPLATES[template_id]['filename'])
+    data = {
+      'uid':'4d616a65656d',
+      'pin':'538d54bf7c684',
+      'route':5,
+      'sender':'YESTAG',
+      'pushid':1,
+      'tempid':self.SMS_TEMPLATES[template_id]['id'],
+      'mobile':number,
+      'message':template.render(Context(context)),
+    }
+    url_values = urllib.urlencode(data)
+    url = 'http://smsapp.ideations4.com/api/sms.php'
+    full_url = url + '?' + url_values
+    print 'full_url:'+full_url
+    data = urllib2.urlopen(full_url)
+    print 'data'+str(data)
+  def sendEmail(self, to, subject, template, context):
+    template = loader.get_template(template)
+    send_mail(subject, template.render(Context(context)), settings.EMAIL_HOST_USER, [to])
+
 class FoundMixin(object):
   def get_found_message(self, name, phone, email=''):
     msg='by: '+name
@@ -300,7 +334,7 @@ class ListClients(FilterMixin, MessageMixin, LoginRequiredMixin, vanilla.ListVie
   def filter_retailer(self, qs, value):
     return qs.filter(retailer__user = self.request.user)
 
-class SMSFound(FoundMixin, vanilla.FormView):
+class SMSFound(Notifier, FoundMixin, vanilla.FormView):
   model = Tag
   form_class = SMSFoundForm
   template_name = 'tags/SMSFoundForm.html'
@@ -327,12 +361,97 @@ class SMSFound(FoundMixin, vanilla.FormView):
       email = '',
       phone = form.cleaned_data['number'],
       owner = self.object.owner,
-      reward = self.object.reward
+      reward = self.object.reward,
     )
-    event.send_notifications()
+    context = Context({
+      'tag':event.tag,
+      'name':event.name,
+      'email':event.email,
+      'phone':event.phone,
+      'reward':event.reward,
+    })
+    self.sendSMS(number = form.cleaned_data['number'], template_id='thanks', context={})
+    self.sendEmail(to = event.tag.owner.email, subject = "YesTag Located!", template = 'tags/tag_found_email.html', context = context)
+    self.sendSMS(number=event.tag.owner.phone, template_id = 'found', context=context)
+    self.sendEmail(to = self.ADMIN_EMAIL, subject = "YesTag Located!", template = 'tags/tag_found_admin_email.html', context = context)
     return HttpResponseRedirect(self.get_success_url())
   def form_invalid(self, form):
-    template = loader.get_template('tags/SMSIncomplete.html')
+    self.sendSMS(number = self.data['number'], template = 'tags/tag_not_found_sms.html', context = {'code':self.data['tag']})
+    # template = loader.get_template('tags/tag_not_found_sms.html')
+    # data = {
+    #   'uid':'4d616a65656d', 
+    #   'pin':'538d54bf7c684',
+    #   'route':5,
+    #   'mobile':self.data['number'],
+    #   'message':template.render(Context({'code':self.data['tag']})),
+    #   'sender':'YESTAG',
+    #   'pushid':1,
+    #   'tempid':16126,
+    # }
+    # url_values = urllib.urlencode(data)
+    # url = 'http://smsapp.ideations4.com/api/sms.php'
+    # full_url = url + '?' + url_values
+    # data = urllib2.urlopen(full_url)
+    self.sendEmail(to = self.ADMIN_EMAIL, subject = "Incomplete SMS recieved",
+      template = 'tags/tag_not_found_sms.html', context = {
+        'message':self.data['tag'],
+        'number':self.data['number']
+      })
+    # send_mail("Incomplete SMS recieved", 
+    #   template.render(Context({
+    #     'message':self.data['tag'],
+    #     'number':self.data['number']
+    #   })), settings.EMAIL_HOST_USER, ['jaredtmartin@gmail.com'])
+    context = self.get_context_data(form=form)
+    return self.render_to_response(context)
+
+class SMSRegister(vanilla.FormView):
+  model = Tag
+  form_class = RegisterSMSCodeForm
+  template_name = 'tags/SMSFoundForm.html'
+  success_url = reverse_lazy('list_tags')
+  def post(self, request):
+    self.data = request.POST
+    return self.process_form()
+  def get(self, request, *args, **kwargs):
+    self.data = request.GET
+    return self.process_form()
+  def process_form(self):
+    self.caller_number = self.data['number']
+    data = self.data['message'].split(' ', 1)
+    form = self.get_form(data={'code':data[0], 'name':data[0], 'user':self.caller_number})
+    if form.is_valid(): return self.form_valid(form)
+    return self.form_invalid(form)
+  def form_valid(self, form):
+    code = form.cleaned_data['code']
+    name = form.cleaned_data['name']
+    user = form.cleaned_data['user']
+    
+    tag = Tag.objects.create(owner=user, code=code, name=name, retailer=code.retailer)
+    Event.objects.create(tag=tag, tipo='Registered', details="", owner = tag.owner)
+    client, created = Client.objects.get_or_create(user=self.request.user, retailer = tag.retailer)
+    code.delete()
+    self.object = tag
+    self.sendSMS(number = self.caller_number, template_id = 'tags/tag_registered_sms.html', context = {'code':code})
+    return HttpResponseRedirect(reverse('edit_tag', kwargs={'pk':tag.pk}))
+
+  def form_invalid(self, form):
+    self.sendSMS(number = self.caller_number, template_id = 'tags/tag_registered_sms.html', context = {'code':code})
+    template = loader.get_template('tags/tag_not_found_sms.html')
+    data = {
+      'uid':'4d616a65656d', 
+      'pin':'538d54bf7c684',
+      'route':5,
+      'mobile':self.data['number'],
+      'message':template.render(Context({'code':self.data['tag']})),
+      'sender':'YESTAG',
+      'pushid':1,
+      'tempid':16126,
+    }
+    url_values = urllib.urlencode(data)
+    url = 'http://smsapp.ideations4.com/api/sms.php'
+    full_url = url + '?' + url_values
+    data = urllib2.urlopen(full_url)
     send_mail("Incomplete SMS recieved", 
       template.render(Context({
         'message':self.data['tag'],

@@ -48,4 +48,23 @@ class SMSFoundForm(forms.Form):
     try: return Tag.objects.get(code=self.cleaned_data['tag'])
     except Tag.DoesNotExist: raise forms.ValidationError("Tag not found.")
     return data
+class RegisterSMSCodeForm(forms.Form):
+  code = forms.CharField()
+  name = forms.CharField(required=False)
+  user = forms.CharField()
+  def clean_code(self):
+    data = self.cleaned_data['code']
+    try: return Code.objects.get(code=self.cleaned_data['code'])
+    except Code.DoesNotExist: raise forms.ValidationError("This is not a valid code.")
+    return data
+  def clean_user(self):
+    data = self.cleaned_data['user']
+    try: return User.objects.get(phone=self.cleaned_data['user'])
+    except User.DoesNotExist: 
+      pw = ''.join(random.choice('0123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijlkmnopqrstuvwxyz') for i in range(9))
+      self.cleaned_data['pw'] = pw
+      return User.objects.create_user(self.cleaned_data['user'], password = pw, phone = self.cleaned_data['user'])
+    raise forms.ValidationError("Invalid User.")
+
+
 

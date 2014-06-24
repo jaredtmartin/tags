@@ -1,4 +1,1 @@
-{% autoescape off %}
-Your YesTag{%if tag.name %}, {{tag.name}},{% else %} {{tag.code}}{%endif%} has been found.
-{%if name%}Contact the finder{% endif %} {% if email %}via email at {{email}}{% endif %}{% if email and phone %} or {% endif %}{% if phone %}via phone at {{phone}}{% endif %}.
-{% endautoescape %}
+We're glad to inform you that YesTags found your lost item, {%if tag.name %}, {{tag.name}},{% else %} {{tag.code}}{%endif%}. You may contact the Finder{% if email %} at {{email}}{% endif %}{% if email and phone %} or {% endif %}{% if phone %} at {{phone}}{% endif %}. Thank You for choosing YesTags.

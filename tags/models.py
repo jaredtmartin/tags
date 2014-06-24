@@ -82,7 +82,7 @@ class Event(models.Model):
       'message':template.render(context),
       'sender':'YESTAG',
       'pushid':1,
-      'tempid':16110,
+      'tempid':16126,
     }
     url_values = urllib.urlencode(data)
     url = 'http://smsapp.ideations4.com/api/sms.php'
