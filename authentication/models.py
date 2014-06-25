@@ -3,7 +3,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password=None):
+    def create_user(self, email, password=None, phone = None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -16,6 +16,7 @@ class UserManager(BaseUserManager):
         )
 
         user.set_password(password)
+        if phone: user.phone = phone
         user.save(using=self._db)
         return user
 
@@ -31,24 +32,18 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
 class User(AbstractBaseUser):
-    email = models.EmailField(
-        verbose_name='email address',
-        max_length=255,
-        unique=True,
-        db_index=True,
-    )
-    first_name = models.CharField('first name', max_length=30, blank=True)
-    last_name = models.CharField('last name', max_length=30, blank=True)
-    street = models.CharField('street address', max_length=32, blank=True, default="")
-    city = models.CharField('city', max_length=32, blank=True, default="")
-    state = models.CharField('state', max_length=32, blank=True, default="")
-    phone = models.CharField('phone number', max_length=16, blank=True, default="")
-    phone2 = models.CharField('alternate phone number', max_length=16, blank=True, default="")
-    email2 = models.CharField('alternate email', max_length=255, blank=True, default="")
-    country = models.CharField('country', max_length=16, blank=True, default="")
-    timezone = models.CharField('timezone', max_length=16, blank=True, default="")
+    email = models.EmailField(verbose_name='Email Address', max_length=255, unique=True, db_index=True,)
+    first_name = models.CharField('First Name', max_length=30, blank=True)
+    last_name = models.CharField('Last Name', max_length=30, blank=True)
+    street = models.CharField('Street Address', max_length=32, blank=True, default="")
+    city = models.CharField('City', max_length=32, blank=True, default="")
+    state = models.CharField('State', max_length=32, blank=True, default="")
+    phone = models.CharField('Phone number', max_length=16, blank=True, default="")
+    phone2 = models.CharField('Alternate phone number', max_length=16, blank=True, default="")
+    email2 = models.CharField('Alternate email', max_length=255, blank=True, default="")
+    country = models.CharField('Country', max_length=16, blank=True, default="")
+    timezone = models.CharField('Timezone', max_length=16, blank=True, default="")
     security_question = models.CharField('Security Question', max_length=255, blank=True, default="")
     security_response = models.CharField('Security Response', max_length=255, blank=True, default="")
     dob = models.CharField('Date of Birth', max_length=16, blank=True, default="")
@@ -56,17 +51,17 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     is_retailer = models.BooleanField(default=False)
     use_nominee = models.BooleanField(default=False)
-    nominee_first_name = models.CharField('nominee first name', max_length=30, blank=True)
-    nominee_last_name = models.CharField('nominee last name', max_length=30, blank=True)
-    nominee_street = models.CharField('nominee street address', max_length=32, blank=True, default="")
-    nominee_city = models.CharField('nominee city', max_length=32, blank=True, default="")
-    nominee_state = models.CharField('nominee state', max_length=32, blank=True, default="")
-    nominee_phone = models.CharField('nominee phone number', max_length=16, blank=True, default="")
-    nominee_phone2 = models.CharField('nominee alternate phone number', max_length=16, blank=True, default="")
-    nominee_email = models.CharField('nominee email', max_length=255, blank=True, default="")
-    nominee_email2 = models.CharField('nominee alternate email', max_length=16, blank=True, default="")
-    nominee_country = models.CharField('nominee_country', max_length=255, blank=True, default="")
-    nominee_timezone = models.CharField('nominee_timezone', max_length=16, blank=True, default="")
+    nominee_first_name = models.CharField('Nominee First Name', max_length=30, blank=True)
+    nominee_last_name = models.CharField('Nominee Last Name', max_length=30, blank=True)
+    nominee_street = models.CharField('Nominee street address', max_length=32, blank=True, default="")
+    nominee_city = models.CharField('Nominee City', max_length=32, blank=True, default="")
+    nominee_state = models.CharField('Nominee State', max_length=32, blank=True, default="")
+    nominee_phone = models.CharField('Nominee Phone number', max_length=16, blank=True, default="")
+    nominee_phone2 = models.CharField('Nominee Alternate phone number', max_length=16, blank=True, default="")
+    nominee_email = models.CharField('Nominee email', max_length=255, blank=True, default="")
+    nominee_email2 = models.CharField('Nominee Alternate email', max_length=16, blank=True, default="")
+    nominee_country = models.CharField('Nominee_country', max_length=255, blank=True, default="")
+    nominee_timezone = models.CharField('Nominee_timezone', max_length=16, blank=True, default="")
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

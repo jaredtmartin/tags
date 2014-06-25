@@ -1,5 +1,6 @@
 from django import forms
 from tags.models import Tag, Code
+from authentication.models import User
 class TagNameForm(forms.ModelForm):
   class Meta:
     model = Tag
@@ -48,6 +49,7 @@ class SMSFoundForm(forms.Form):
     try: return Tag.objects.get(code=self.cleaned_data['tag'])
     except Tag.DoesNotExist: raise forms.ValidationError("Tag not found.")
     return data
+
 class RegisterSMSCodeForm(forms.Form):
   code = forms.CharField()
   name = forms.CharField(required=False)
@@ -58,6 +60,7 @@ class RegisterSMSCodeForm(forms.Form):
     except Code.DoesNotExist: raise forms.ValidationError("This is not a valid code.")
     return data
   def clean_user(self):
+    import random
     data = self.cleaned_data['user']
     try: return User.objects.get(phone=self.cleaned_data['user'])
     except User.DoesNotExist: 
