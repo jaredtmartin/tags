@@ -43,11 +43,14 @@ class Notifier(object):
     url = 'http://smsapp.ideations4.com/api/sms.php'
     full_url = url + '?' + url_values
     # print 'full_url:'+full_url
-    if not settings.TESTING: data = urllib2.urlopen(full_url)
-    else: 
-      print "SMS not sent because TESTING is set to true. Just dumping info here."
-      print 'full_url:'+full_url
-      print 'data'+str(data)
+    response = urllib2.urlopen(full_url)
+    result=response.read()
+    if result.find('Template Not Matching')>-1: Event.objects.create(tipo='Error: Template not Matching', details='Message:' + data['message'] +' template_id:'+data['tempid'])
+    # if not settings.TESTING: data = urllib2.urlopen(full_url)
+    # else: 
+    #   print "SMS not sent because TESTING is set to true. Just dumping info here."
+    #   print 'full_url:'+full_url
+    #   print 'data'+str(data)
   def sendEmail(self, to, subject, template, context):
     template = loader.get_template(template)
     send_mail(subject, template.render(Context(context)), settings.EMAIL_HOST_USER, [to])
@@ -445,18 +448,23 @@ class SMSRegister(Notifier, vanilla.FormView):
     tag = Tag.objects.create(owner=user, code=code, name=name, retailer=code.retailer)
     Event.objects.create(tag=tag, tipo='Registered', details="", owner = tag.owner)
     client, created = Client.objects.get_or_create(user=user, retailer = tag.retailer)
+    print 'code:'
+    print type(code)
+    print code
+    code_str = code.code
     code.delete()
     self.object = tag
     # The form will have a password in the cleaned data only if a new user was created
     if 'pw' in form.cleaned_data: 
-      self.sendSMS(number = self.caller_number, template_id = 'registered_new', context = {'code':code, 'username':self.caller_number,'password':form.cleaned_data['pw']})  
+      # pass
+      self.sendSMS(number = self.caller_number, template_id = 'registered_new', context = {'code':code.code, 'username':self.caller_number,'password':form.cleaned_data['pw']})  
     else: 
-      self.sendSMS(number = self.caller_number, template_id = 'registered', context = {'code':code})
-      print 'user.email: '+str(user.email)
+      self.sendSMS(number = self.caller_number, template_id = 'registered', context = {'code':code.code})
+      # print 'user.email: '+str(user.email)
       if user.email:
         self.sendEmail(to = user.email, subject = "YesTag Registered",
           template = 'tags/tag_registered_phone_email.html', context = {
-            'code':self.data['code']
+            'code':code.code
           })
     return HttpResponseRedirect(reverse('edit_tag', kwargs={'pk':tag.pk}))
 

@@ -38,17 +38,19 @@ class Code(models.Model):
   def __unicode__(self): return self.code
 
 class Event(models.Model):
-  tag = models.ForeignKey(Tag, related_name='events')
-  owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='events')
-  details = models.CharField(max_length=64)
-  tipo = models.CharField(max_length=16)
+  tag = models.ForeignKey(Tag, related_name='events', null=True, blank=True)
+  owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='events', null=True, blank=True)
+  details = models.CharField(max_length=255)
+  tipo = models.CharField(max_length=32)
   created_at = models.DateTimeField(auto_now_add=True)
   viewed = models.BooleanField(default=False)
   name = models.CharField(max_length=64)
   email = models.CharField(max_length=64)
   phone = models.CharField(max_length=64)
   reward = models.CharField(max_length=64)
-  def __unicode__(self): return self.tag.name + ' ' + self.tipo
+  def __unicode__(self): 
+    if self.tag: return self.tag.name + ' ' + self.tipo
+    return self.tipo
   def send_notifications(self):
     if self.tag.owner.email: self.send_email_notification()
     if self.tag.owner.phone: self.send_sms_notification()
@@ -93,3 +95,5 @@ class Client(models.Model):
   retailer = models.ForeignKey(Retailer, related_name='clients')
   user = models.OneToOneField(User)
   created_at = models.DateTimeField(auto_now_add=True)
+  def __unicode__(self): 
+    return self.retailer.name + " " + self.user.first_name + " " + self.user.last_name
