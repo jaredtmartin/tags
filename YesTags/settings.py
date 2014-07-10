@@ -20,10 +20,10 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = "587"
-EMAIL_HOST_USER = 'writeraxis@gmail.com'
-EMAIL_HOST_PASSWORD = '179862934'
+EMAIL_HOST = 'admin.yestags.com'
+EMAIL_PORT = "465"
+EMAIL_HOST_USER = 'notifications@yestags.com'
+EMAIL_HOST_PASSWORD = '9947805566'
 EMAIL_USE_TLS = True
 
 AUTH_USER_MODEL = 'authentication.User'
