@@ -54,7 +54,15 @@ class Notifier(object):
     # print 'full_url:'+full_url
     response = urllib2.urlopen(full_url)
     result=response.read()
-    if result.find('Template Not Matching')>-1: Event.objects.create(tipo='Error: Template not Matching', details='Message:' + data['message'] +' template_id:'+data['tempid'])
+    if result.find('Template Not Matching')>-1: 
+      self.sendEmail(self, ADMIN_EMAIL, 'Template not matching error', 
+        template='tags/template_not_matching.html',
+        context={
+          message:data['message'],
+          url:full_url,
+        }
+      )
+      Event.objects.create(tipo='Error: Template not Matching', details='Message:' + data['message'] +' template_id:'+data['tempid'])
     # if not settings.TESTING: data = urllib2.urlopen(full_url)
     # else: 
     #   print "SMS not sent because TESTING is set to true. Just dumping info here."
