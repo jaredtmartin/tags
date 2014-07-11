@@ -58,8 +58,8 @@ class Notifier(object):
       self.sendEmail(self, self.ADMIN_EMAIL, 'Template not matching error', 
         template='tags/template_not_matching.html',
         context={
-          message:data['message'],
-          url:full_url,
+          'message':data['message'],
+          'url':full_url,
         }
       )
       Event.objects.create(tipo='Error: Template not Matching', details='Message:' + data['message'] +' template_id:'+data['tempid'])
