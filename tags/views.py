@@ -360,6 +360,7 @@ class SMSFound(Notifier, FoundMixin, vanilla.FormView):
     self.data = request.GET
     return self.process_form()
   def process_form(self):
+    if self.data['number'][:2] == '91': self.data['number'] = self.data['number'][2:]
     form = self.get_form(data=self.data)
     if form.is_valid(): return self.form_valid(form)
     return self.form_invalid(form)
@@ -432,6 +433,7 @@ class SMSRegister(Notifier, vanilla.FormView):
     self.data = request.GET.copy()
     return self.process_form()
   def process_form(self):
+    if self.data['number'][:2] == '91': self.data['number'] = self.data['number'][2:]
     self.caller_number = self.data['number']
     msg=self.data['message']
     data = self.data['message'].split(' ', 1)
