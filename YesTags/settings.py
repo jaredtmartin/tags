@@ -20,11 +20,11 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-EMAIL_HOST = 'admin.yestags.com'
-EMAIL_PORT = "465"
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = "25"
 EMAIL_HOST_USER = 'notifications@yestags.com'
 EMAIL_HOST_PASSWORD = '9947805566'
-EMAIL_USE_TLS = True
+# EMAIL_USE_TLS = False
 
 AUTH_USER_MODEL = 'authentication.User'
 # Local time zone for this installation. Choices can be found here:
