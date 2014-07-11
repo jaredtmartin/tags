@@ -20,11 +20,11 @@ import urllib
 class Notifier(object):
   SMS_TEMPLATES = {
     'not_found':{'id':'16125','filename':'tags/tag_not_found_sms.html'},
-    'found':{'id':'16126','filename':'tags/tag_found_sms.html'},
+    'found':{'id':'16602','filename':'tags/tag_found_sms.html'},
     'not_registered':{'id':'16123','filename':'tags/tag_not_registered_sms.html'},
     'registered':{'id':'16122','filename':'tags/tag_registered_sms.html'},
     'registered_new':{'id':'16121','filename':'tags/tag_registered_new_user_sms.html'},
-    'thanks':{'id':'16124', 'filename':'tags/tag_found_thankyou_sms.html'}
+    'thanks':{'id':'16601', 'filename':'tags/tag_found_thankyou_sms.html'}
   }
   ADMIN_EMAIL='jaredtmartin@gmail.com'
   def sendSMS(self, number, template_id, context):
