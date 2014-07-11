@@ -433,9 +433,9 @@ class SMSRegister(Notifier, vanilla.FormView):
   def process_form(self):
     self.caller_number = self.data['number']
     msg=self.data['message']
-    data = self.data['message'].split(' ', 1)
-    self.data['code'] = data[0]
-    if len(data) > 1: self.data['name'] = data[1]
+    data = self.data['message'].split(' ', 2)
+    self.data['code'] = data[1]
+    if len(data) > 1: self.data['name'] = data[2]
     else: self.data['name'] = 'Unnamed Tag'
     form = self.get_form(data={'code':self.data['code'], 'name':self.data['name'], 'user':self.caller_number})
     if form.is_valid(): return self.form_valid(form)
