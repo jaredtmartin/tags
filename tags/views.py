@@ -55,7 +55,7 @@ class Notifier(object):
     response = urllib2.urlopen(full_url)
     result=response.read()
     if result.find('Template Not Matching')>-1: 
-      self.sendEmail(self, self.ADMIN_EMAIL, 'Template not matching error', 'tags/template_not_matching.html',{
+      self.sendEmail(self.ADMIN_EMAIL, 'Template not matching error', 'tags/template_not_matching.html',{
           'message':data['message'],
           'url':full_url,
         }
