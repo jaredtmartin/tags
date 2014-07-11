@@ -15,6 +15,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 from django.core.urlresolvers import reverse_lazy
+from django.core.validators import email_re
 import urllib2
 import urllib
 class Notifier(object):
@@ -383,7 +384,7 @@ class SMSFound(Notifier, FoundMixin, vanilla.FormView):
       'reward':event.reward,
     })
     self.sendSMS(number = form.cleaned_data['number'], template_id='thanks', context={})
-    self.sendEmail(to = event.tag.owner.email, subject = "YesTag Located!", template = 'tags/tag_found_email.html', context = context)
+    if event.tag.owner.email and email_re.match(event.tag.owner.email): self.sendEmail(to = event.tag.owner.email, subject = "YesTag Located!", template = 'tags/tag_found_email.html', context = context)
     self.sendSMS(number=event.tag.owner.phone, template_id = 'found', context=context)
     self.sendEmail(to = self.ADMIN_EMAIL, subject = "YesTag Located!", template = 'tags/tag_found_admin_email.html', context = context)
     return HttpResponseRedirect(self.get_success_url())
@@ -433,9 +434,9 @@ class SMSRegister(Notifier, vanilla.FormView):
   def process_form(self):
     self.caller_number = self.data['number']
     msg=self.data['message']
-    data = self.data['message'].split(' ', 2)
-    self.data['code'] = data[1]
-    if len(data) > 1: self.data['name'] = data[2]
+    data = self.data['message'].split(' ', 1)
+    self.data['code'] = data[0]
+    if len(data) > 1: self.data['name'] = data[1]
     else: self.data['name'] = 'Unnamed Tag'
     form = self.get_form(data={'code':self.data['code'], 'name':self.data['name'], 'user':self.caller_number})
     if form.is_valid(): return self.form_valid(form)
@@ -461,7 +462,7 @@ class SMSRegister(Notifier, vanilla.FormView):
     else: 
       self.sendSMS(number = self.caller_number, template_id = 'registered', context = {'code':code.code})
       # print 'user.email: '+str(user.email)
-      if user.email:
+      if user.email and email_re.match(user.email):
         self.sendEmail(to = user.email, subject = "YesTag Registered",
           template = 'tags/tag_registered_phone_email.html', context = {
             'code':code.code
