@@ -362,10 +362,10 @@ class SMSFound(Notifier, FoundMixin, vanilla.FormView):
   email_template_name = "tags/report_email.html"
   success_url = reverse_lazy('list_tags')
   def post(self, request):
-    self.data = request.POST
+    self.data = request.POST.copy()
     return self.process_form()
   def get(self, request, *args, **kwargs):
-    self.data = request.GET
+    self.data = request.GET.copy()
     return self.process_form()
   def process_form(self):
     if self.data['number'][:2] == '91': self.data['number'] = self.data['number'][2:]
