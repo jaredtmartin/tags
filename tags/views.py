@@ -52,8 +52,8 @@ class Notifier(object):
     }
     # data['message'] = urllib.quote(data['message'])
     url_values = urllib.urlencode(data)
-    url_values = url_values.replace('+', '%20')
-    url_values = url_values.replace('&amp;', '&')
+    # url_values = url_values.replace('+', '%20')
+    # url_values = url_values.replace('&amp;', '&')
     url = 'http://smsapp.ideations4.com/api/sms.php'
     full_url = url + '?' + url_values
     # print 'full_url:'+full_url
