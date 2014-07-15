@@ -43,8 +43,10 @@ class Notifier(object):
       'pin':'538d54bf7c684',
       'route':5,
       'sender':'YESTAG',
-      'pushid':1,
-      'tempid':self.SMS_TEMPLATES[template_id]['id'],
+      # 'pushid':1,
+      # 'tempid':self.SMS_TEMPLATES[template_id]['id'],
+      'tempid':2,
+      # 'dynamic':1,
       'mobile':number,
       'message':template.render(Context(context)),
     }
