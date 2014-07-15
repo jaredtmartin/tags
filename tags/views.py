@@ -51,6 +51,7 @@ class Notifier(object):
     # data['message'] = urllib.quote(data['message'])
     url_values = urllib.urlencode(data)
     url_values = url_values.replace('+', '%20')
+    url_values = url_values.replace('&amp;', '&')
     url = 'http://smsapp.ideations4.com/api/sms.php'
     full_url = url + '?' + url_values
     # print 'full_url:'+full_url
@@ -60,6 +61,7 @@ class Notifier(object):
       self.sendEmail(self.ADMIN_EMAIL, 'Template not matching error', 'tags/template_not_matching_email.html',{
           'message':data['message'],
           'url':full_url,
+          'data':data,
         }
       )
       Event.objects.create(tipo='Error: Template not Matching', details='Message:' + data['message'] +' template_id:'+data['tempid'])
