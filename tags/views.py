@@ -48,8 +48,9 @@ class Notifier(object):
       'mobile':number,
       'message':template.render(Context(context)),
     }
-    data['message'] = urllib.quote(data['message'])
+    # data['message'] = urllib.quote(data['message'])
     url_values = urllib.urlencode(data)
+    url_values = url_values.replace('+', '%20')
     url = 'http://smsapp.ideations4.com/api/sms.php'
     full_url = url + '?' + url_values
     # print 'full_url:'+full_url
