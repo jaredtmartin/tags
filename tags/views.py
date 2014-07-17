@@ -141,6 +141,16 @@ class ReportMessagesMixin(object):
   #       messages.success(self.request, msg)
   #   return context
 
+class DebugView(vanilla.TemplateView):
+  template_name = "tags/debug.html"
+  def get_context_data(self, **kwargs):
+    import getpass
+    # context = super(DebugView, self).get_context_data({'sysuser':getpass.getuser()})
+    
+    # context['sysuser'] = getpass.getuser()
+    print "getpass.getuser():"+str(getpass.getuser())
+    return super(DebugView, self).get_context_data(sysuser=getpass.getuser())
+
 class FilterMixin(object):
   filter_on = []
   def filter(self, queryset):
@@ -226,10 +236,7 @@ class TagImageAjax(AjaxEventView):
   form_class = TagImageForm
   template_name = "tags/tag_image.html"
   error_message = "There was an error updating the tag's image."
-  def create_event(self, object): 
-    import os
-    # print "os.getusername():" + str(os.getusername())
-    send_mail('username', "os.getusername():" + str(os.getusername()), 'jaredtmartin@gmail.com', ['jaredtmartin@gmail.com'])
+  def create_event(self, object):     
     return Event.objects.create(tag=object, tipo='Image Changed', details="", owner = object.owner)
 
 class ShowTag(vanilla.DetailView, ReportMessagesMixin):
