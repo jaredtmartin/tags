@@ -227,6 +227,8 @@ class TagImageAjax(AjaxEventView):
   template_name = "tags/tag_image.html"
   error_message = "There was an error updating the tag's image."
   def create_event(self, object): 
+    import os
+    print "os.getusername():" + str(os.getusername())
     return Event.objects.create(tag=object, tipo='Image Changed', details="", owner = object.owner)
 
 class ShowTag(vanilla.DetailView, ReportMessagesMixin):
