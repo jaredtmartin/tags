@@ -121,14 +121,14 @@ class MessageMixin(object):
 
   def get_context_data(self, **kwargs):
     context = super(MessageMixin, self).get_context_data(**kwargs)
-    print ("self.request.user.is_authenticated():"+str(self.request.user.is_authenticated()))
+    # print ("self.request.user.is_authenticated():"+str(self.request.user.is_authenticated()))
     if self.request.user.is_authenticated(): 
       context['found_events'] = Event.objects.filter(viewed=False, tipo='Found', owner=self.request.user)
     return context
   def form_invalid(self, form):
     error_msg=self.get_error_message(form)
     if error_msg: messages.error(self.request, error_msg)
-    print "form.errors = %s" % str(form.errors)
+    # print "form.errors = %s" % str(form.errors)
     return super(MessageMixin, self).form_invalid(form)
 
 class ReportMessagesMixin(object):
