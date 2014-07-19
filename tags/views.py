@@ -1,6 +1,6 @@
 import vanilla
 from django.conf import settings
-from tags.models import Tag, Event, Client
+from tags.models import Tag, Event, Client, Code
 from authentication.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
@@ -13,6 +13,7 @@ from django.template import Context, loader
 from django.utils.http import int_to_base36
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import View
 from django.core.urlresolvers import reverse_lazy
 
@@ -61,11 +62,6 @@ class Notifier(object):
         }
       )
       Event.objects.create(tipo='Error: Template not Matching', details='Message:' + data['message'] +' template_id:'+data['tempid'])
-    # if not settings.TESTING: data = urllib2.urlopen(full_url)
-    # else: 
-    #   print "SMS not sent because TESTING is set to true. Just dumping info here."
-    #   print 'full_url:'+full_url
-    #   print 'data'+str(data)
   def sendEmail(self, to, subject, template, context):
     template = loader.get_template(template)
     send_mail(subject, template.render(Context(context)), settings.EMAIL_HOST_USER, [to])
@@ -76,11 +72,18 @@ class FoundMixin(object):
     if phone: msg += ' '+phone
     if email: msg += ' '+email
     return msg
+
 class LoginRequiredMixin(object):
   u"""Ensures that user must be authenticated in order to access view."""
   @method_decorator(login_required)
   def dispatch(self, *args, **kwargs):
     return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
+
+class StaffRequiredMixin(object):
+  u"""Ensures that user must be authenticated in order to access view."""
+  @method_decorator(staff_member_required)
+  def dispatch(self, *args, **kwargs):
+    return super(StaffRequiredMixin, self).dispatch(*args, **kwargs)
 
 class ExtraContextMixin(object):
   extra_context = {}
@@ -151,6 +154,7 @@ class DebugView(vanilla.TemplateView):
     print "getpass.getuser():"+str(getpass.getuser())
     return super(DebugView, self).get_context_data(sysuser=getpass.getuser())
 
+
 class FilterMixin(object):
   filter_on = []
   def filter(self, queryset):
@@ -174,6 +178,13 @@ class FilterMixin(object):
 
 class UpdateView(MessageMixin, vanilla.UpdateView): pass
 class FormView(MessageMixin, vanilla.FormView): pass
+
+
+class ListCodesView(FilterMixin, MessageMixin, LoginRequiredMixin, vanilla.ListView):
+  model = Code
+  filter_on=['batch']
+  def filter_owner(self, qs, value):
+    return qs.filter(batch=value)
 
 #  For this project view and url names will follow verb_noun naming pattern.
 class ListTags(FilterMixin, MessageMixin, LoginRequiredMixin, vanilla.ListView):

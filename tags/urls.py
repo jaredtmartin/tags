@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from tags.views import (ListTags, EditTag, TagNameAjax, TagImageAjax, ShowTag, SearchTag, ReportTag, 
   RegisterTag, HowItWorks, Home, TagRewardAjax, DismissEvent, ViewEvent, ListClients, SMSFound, SMSRegister,
-  DebugView)
+  DebugView, ListCodesView)
 
 #  For this project view and url names will follow verb_noun naming pattern.
 
@@ -23,4 +23,5 @@ urlpatterns = patterns('',
     url(r'^sms/found/$',SMSFound.as_view(),name="SMS_found"),
     url(r'^sms/register/$',SMSRegister.as_view(),name="SMS_register"),
     url(r'^debug/', DebugView.as_view(), name='debug'),
+    url(r'^codes/', ListCodesView.as_view(), name='list_codes'),
    )

@@ -1,6 +1,5 @@
 from django.contrib import admin
-from tags.models import Tag, Code, Event, Retailer, Client
-
+from tags.models import Tag, Code, Event, Retailer, Client, Batch
 
 from django.utils.html import format_html
 from django.core.urlresolvers import reverse
@@ -41,8 +40,11 @@ class RetailerAdmin(admin.ModelAdmin):
         TagsInline,
         CodesInline,
     ]
+class BatchAdmin(admin.ModelAdmin):
+  list_display = ('name','codes_link')
 
 admin.site.register(Tag, TagAdmin)
+admin.site.register(Batch, BatchAdmin)
 admin.site.register(Code)
 admin.site.register(Event)
 admin.site.register(Client)
