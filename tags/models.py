@@ -36,7 +36,7 @@ post_save.connect(create_codes, sender=Batch)
 
 class Tag(models.Model):
   name = models.CharField(max_length=64)
-  code = models.CharField(blank=False, max_length=8)
+  code = models.CharField(blank=False, max_length=16)
   retailer = models.ForeignKey(Retailer, related_name='tags')
   batch = models.ForeignKey(Batch, related_name='tags')
   owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tags')
@@ -47,10 +47,10 @@ class Tag(models.Model):
 class Code(models.Model):
   retailer = models.ForeignKey(Retailer, related_name='codes')
   batch = models.ForeignKey(Batch, related_name='batches')
-  code = models.CharField(blank=True, max_length=8)
+  code = models.CharField(blank=True, max_length=16)
   def generate_code(self):
     # To make a code like A12345
-    return random.choice('ABCDEFGHJKLMNPQRSTUVWXYZ') + ''.join(random.choice('23456789') for i in range(CODE_LENGTH))
+    return random.choice('ABCDEFGHJKLMNPQRSTUVWXYZ') + (''.join(random.choice('23456789') for i in range(5)))
     # return ''.join(random.choice('23456789ABCDEFGHJKLMNPQRSTUVWXYZ') for i in range(CODE_LENGTH))
   def save(self, *args, **kwargs):
     while not self.code:
