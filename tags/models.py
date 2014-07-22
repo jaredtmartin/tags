@@ -49,7 +49,9 @@ class Code(models.Model):
   batch = models.ForeignKey(Batch, related_name='batches')
   code = models.CharField(blank=True, max_length=8)
   def generate_code(self):
-    return ''.join(random.choice('23456789ABCDEFGHJKLMNPQRSTUVWXYZ') for i in range(CODE_LENGTH))
+    # To make a code like A12345
+    return random.choice('ABCDEFGHJKLMNPQRSTUVWXYZ') + ''.join(random.choice('23456789') for i in range(CODE_LENGTH))
+    # return ''.join(random.choice('23456789ABCDEFGHJKLMNPQRSTUVWXYZ') for i in range(CODE_LENGTH))
   def save(self, *args, **kwargs):
     while not self.code:
       code = self.generate_code()
