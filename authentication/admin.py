@@ -45,7 +45,7 @@ class UserChangeForm(forms.ModelForm):
         model = User
         fields = ['email', 'password', 'first_name','last_name','street','city','state','phone', 'is_active', 'is_staff', 
         'nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
-        'nominee_state', 'nominee_phone', 'nominee_phone2', 'is_retailer']
+        'nominee_state', 'nominee_phone', 'nominee_phone2', 'is_retailer','force_change_password']
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -67,7 +67,7 @@ class UserAdmin(UserAdmin):
         'nominee_state', 'nominee_phone', 'nominee_phone2')
     list_filter = ('is_staff',)
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password','force_change_password')}),
         ('Personal info', {'fields': ('first_name','last_name','street','city','state','phone')}),
         ('Nominee', {'fields': ('nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
         'nominee_state', 'nominee_phone', 'nominee_phone2')}),
@@ -78,7 +78,7 @@ class UserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'first_name','last_name','street','city','state','phone', 'password1', 'password2')}
+            'fields': ('email', 'first_name','last_name','street','city','state','phone', 'password1', 'password2', 'force_change_password')}
         ),
     )
     search_fields = ('email',)

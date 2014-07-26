@@ -366,7 +366,6 @@ class ViewEvent(vanilla.DetailView):
     self.object.save()
     return response
 
-
 class DismissEvent(vanilla.UpdateView):
   model = Event
   template_name = "design/ajax.html"

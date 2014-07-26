@@ -12,6 +12,8 @@ from django import forms
 import pytz
 from django.core.mail import send_mail
 from django.forms import ModelForm, ChoiceField
+
+from django.utils.translation import ugettext, ugettext_lazy as _
 # from articles.models import UserProfile, USER_MODES
 class SimpleUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label="Password", widget=forms.PasswordInput(attrs={'placeholder':'Password','class':'form-control'}))
@@ -205,4 +207,19 @@ class PasswordChangeForm(django_forms.PasswordChangeForm):
                                     widget=forms.PasswordInput(attrs={'placeholder':'Retype Password','class':'form-control'}))
     old_password = forms.CharField(label="Old password",
                                    widget=forms.PasswordInput(attrs={'placeholder':'Old Password','class':'form-control'}))
+    error_messages = dict(SetPasswordForm.error_messages, **{
+        'password_incorrect': _("Your old password was entered incorrectly. Please enter it again."),
+        'password_same_as_old': _("You new password must be different from your previous password."),
+    })
+    def save(self, commit=True):
+      super(PasswordChangeForm, self).save(commit=False)
+      self.user.force_change_password = False
+      if commit: self.user.save()
+      return self.user
+    def clean_new_password1(self):
+      new_password1 = self.cleaned_data.get('new_password1')
+      old_password = self.cleaned_data.get('old_password')
+      if new_password1 == old_password:
+        raise forms.ValidationError(self.error_messages['password_same_as_old'])
+      return new_password1
 
