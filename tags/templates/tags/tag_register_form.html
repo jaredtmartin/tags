@@ -7,14 +7,14 @@
   </div>
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
-      <p class="lead">Please enter the code found on your new tag.</p>
+      <p class="lead">Please enter the Tag ID found on your new tag.</p>
     </div>
   </div>
   <form action="{% url "register" %}" method="post">{% csrf_token %}
     <div class="row input-row">
       <div class="col-md-5 col-md-offset-3">
         {{form.code.errors}}
-        <input id="id_code" type="text" name="code" placeholder="Code" class="form-control" value={{form.code.value|default:""}}>
+        <input id="id_code" type="text" name="code" placeholder="Tag ID" class="form-control" value={{form.code.value|default:""}}>
       </div>
     </div>
     <div class="row input-row">

@@ -64,9 +64,9 @@ class RegisterSMSCodeForm(forms.Form):
     data = self.cleaned_data['user']
     try: return User.objects.get(phone=self.cleaned_data['user'])
     except User.DoesNotExist: 
-      pw = ''.join(random.choice('0123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijlkmnopqrstuvwxyz') for i in range(9))
+      pw = ''.join(random.choice('0123456789') for i in range(5))
       self.cleaned_data['pw'] = pw
-      return User.objects.create_user(self.cleaned_data['user'], password = pw, phone = self.cleaned_data['user'], first_name = self.cleaned_data['user'])
+      return User.objects.create_user(self.cleaned_data['user'], password = pw, phone = self.cleaned_data['user'], first_name = self.cleaned_data['user'], force_change_password = True)
     raise forms.ValidationError("Invalid User.")
 
 

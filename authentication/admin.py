@@ -43,7 +43,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'first_name','last_name','street','city','state','phone', 'is_active', 'is_admin', 
+        fields = ['email', 'password', 'first_name','last_name','street','city','state','phone', 'is_active', 'is_staff', 
         'nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
         'nominee_state', 'nominee_phone', 'nominee_phone2', 'is_retailer']
 
@@ -62,16 +62,16 @@ class UserAdmin(UserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'first_name','last_name','street','city','state','phone', 'is_admin', 
+    list_display = ('email', 'first_name','last_name','street','city','state','phone', 'is_staff', 
         'nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
         'nominee_state', 'nominee_phone', 'nominee_phone2')
-    list_filter = ('is_admin',)
+    list_filter = ('is_staff',)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('first_name','last_name','street','city','state','phone')}),
         ('Nominee', {'fields': ('nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
         'nominee_state', 'nominee_phone', 'nominee_phone2')}),
-        ('Permissions', {'fields': ('is_admin','is_retailer')}),
+        ('Permissions', {'fields': ('is_staff','is_retailer')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -89,4 +89,4 @@ class UserAdmin(UserAdmin):
 admin.site.register(User, UserAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
-admin.site.unregister(Group)
+# admin.site.unregister(Group)

@@ -9,6 +9,7 @@ from django.conf import settings
 from django.utils.http import urlquote, base36_to_int
 from django.contrib.sites.models import Site
 from django.views.generic.edit import CreateView, UpdateView
+from django.contrib.auth import forms as django_forms
 from django.contrib import messages
 # from vanilla import FormView
 import vanilla
@@ -153,7 +154,7 @@ from forms import LoginForm
 class LoginView(vanilla.FormView):
   redirect_field_name = REDIRECT_FIELD_NAME
   template_name = 'authentication/login.html'
-  form_class = LoginForm
+  form_class = django_forms.AuthenticationForm
   success_url = settings.LOGIN_REDIRECT_URL
 
   @method_decorator(csrf_protect)
@@ -167,7 +168,9 @@ class LoginView(vanilla.FormView):
     can check the test cookie stuff and log him in.
     """
     self.check_and_delete_test_cookie()
-    login(self.request, form.get_user())
+    user = form.get_user()
+    login(self.request, user)
+    # if user.force_change_password: return HttpResponseRedirect('/admin/password_change/')
     return super(LoginView, self).form_valid(form)
 
   def form_invalid(self, form):
