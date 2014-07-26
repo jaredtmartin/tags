@@ -154,7 +154,7 @@ from forms import LoginForm
 class LoginView(vanilla.FormView):
   redirect_field_name = REDIRECT_FIELD_NAME
   template_name = 'authentication/login.html'
-  form_class = django_forms.AuthenticationForm
+  form_class = LoginForm
   success_url = settings.LOGIN_REDIRECT_URL
 
   @method_decorator(csrf_protect)
