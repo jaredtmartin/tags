@@ -1,0 +1,22 @@
+New Valid Code http://www.yestags.com/tags/sms/register/?number=1234567890&message=
+Existing user valid code
+existing user valide code with name
+
+
+
+
+
+V = Valid Code
+N = Named Tag
+U = Existing User
+		CODE 					Tag 					user  			URL
+Vnu Valid, 			Unnamed, 				New 				http://localhost:8000/tags/sms/register/?number=1111&message=AAAA
+VnU Valid, 			Unnamed				Existing  		http://localhost:8000/tags/sms/register/?number=1111&message=BBBB
+VNU Valid, 			Named, 				Existing  		http://localhost:8000/tags/sms/register/?number=1111&message=CCCC Cat
+vnU Invalid 		Unnamed 			Existing 			http://localhost:8000/tags/sms/register/?number=1111&message=XXXX
+vNU Invalid 		Named 				Existing			http://localhost:8000/tags/sms/register/?number=1111&message=XXXX Trash
+vnu Invalid 		Unnamed 				New					http://localhost:8000/tags/sms/register/?number=2222&message=XXXX
+VNu Valid, 			Named, 					New 				http://localhost:8000/tags/sms/register/?number=3333&message=DDDD Dog
+vNu Invalid 		Named 					New					http://localhost:8000/tags/sms/register/?number=4444&message=XXXX Grouch
+
+

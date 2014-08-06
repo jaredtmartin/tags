@@ -105,6 +105,8 @@ class User(django_models.AbstractBaseUser, django_models.PermissionsMixin):
     dob = models.CharField('Date of Birth', max_length=16, blank=True, default="")
     is_retailer = models.BooleanField(default=False)
     use_nominee = models.BooleanField(default=False)
+    blocked_until = models.DateTimeField(_('blocked_until'), default=None, blank=True, null=True)
+    tries_left = models.IntegerField(default=3)
     force_change_password = models.BooleanField(default=False)
     nominee_first_name = models.CharField('Nominee First Name', max_length=30, blank=True)
     nominee_last_name = models.CharField('Nominee Last Name', max_length=30, blank=True)
@@ -179,3 +181,7 @@ class User(django_models.AbstractBaseUser, django_models.PermissionsMixin):
             except (ImportError, ImproperlyConfigured):
                 raise SiteProfileNotAvailable
         return self._profile_cache
+class PhoneNumber(models.Model):
+    blocked_until = models.DateTimeField(_('blocked_until'), default=None, blank=True, null=True)
+    tries_left = models.IntegerField(default=3)
+    phone = models.CharField('Phone number', max_length=16, blank=True, default="")

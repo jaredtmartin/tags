@@ -1,7 +1,7 @@
 import vanilla
 from django.conf import settings
 from tags.models import Tag, Event, Client, Code
-from authentication.models import User
+from authentication.models import User, PhoneNumber
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from tags.forms import TagNameForm, TagImageForm, SearchForm, ReportContactForm, RegisterCodeForm, \
@@ -16,6 +16,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.generic import View
 from django.core.urlresolvers import reverse_lazy
+from datetime import datetime, timedelta
+from django.utils import timezone
+import random
+# import datetime
 
 import re
 email_re = re.compile(
@@ -34,7 +38,8 @@ class Notifier(object):
     'not_registered':{'id':'16123','filename':'tags/tag_not_registered_sms.html'},
     'registered':{'id':'16122','filename':'tags/tag_registered_sms.html'},
     'registered_new':{'id':'16121','filename':'tags/tag_registered_new_user_sms.html'},
-    'thanks':{'id':'16601', 'filename':'tags/tag_found_thankyou_sms.html'}
+    'thanks':{'id':'16601', 'filename':'tags/tag_found_thankyou_sms.html'},
+    'too_many_attempts':{'id':'17918', 'filename':'tags/too_many_attempts_sms.html'}
   }
   ADMIN_EMAIL='jaredtmartin@gmail.com'
   def sendSMS(self, number, template_id, context):
@@ -53,18 +58,21 @@ class Notifier(object):
     url = 'http://smsapp.ideations4.com/api/sms.php'
     full_url = url + '?' + url_values
     # print 'full_url:'+full_url
-    response = urllib2.urlopen(full_url)
-    result=response.read()
-    if result.find('Template Not Matching')>-1: 
-      self.sendEmail(self.ADMIN_EMAIL, 'Template not matching error', 'tags/template_not_matching_email.html',{
-          'message':data['message'],
-          'url':full_url,
-        }
-      )
-      Event.objects.create(tipo='Error: Template not Matching', details='Message:' + data['message'] +' template_id:'+data['tempid'])
+    if number in ['1111','2222','3333','4444','5555','6666','7777','8888','9999']: print 'Sending SMS:'+full_url
+    else: 
+      response = urllib2.urlopen(full_url)
+      result=response.read()
+      if result.find('Template Not Matching')>-1: 
+        self.sendEmail(self.ADMIN_EMAIL, 'Template not matching error', 'tags/template_not_matching_email.html',{
+            'message':data['message'],
+            'url':full_url,
+          }
+        )
+        Event.objects.create(tipo='Error: Template not Matching', details='Message:' + data['message'] +' template_id:'+data['tempid'])
   def sendEmail(self, to, subject, template, context):
     template = loader.get_template(template)
-    send_mail(subject, template.render(Context(context)), settings.EMAIL_HOST_USER, [to])
+    if context['number'] in ['1111','2222','3333','4444','5555','6666','7777','8888','9999']: print 'Sending Email:'+template.render(Context(context))
+    else: send_mail(subject, template.render(Context(context)), settings.EMAIL_HOST_USER, [to])
 
 class FoundMixin(object):
   def get_found_message(self, name, phone, email=''):
@@ -343,14 +351,35 @@ class RegisterTag(FormView):
   form_class = RegisterCodeForm
   template_name = "tags/tag_register_form.html"
   success_message = "Your new tag has been registered successfully."
+  blocked_message = "You have made too many incorrect attempts to register codes.  Please wait a while and try again later."
+  def post(self, request):
+    if self.request.user and self.request.user.blocked_until and self.request.user.blocked_until > timezone.now():
+      messages.warning(self.request, self.blocked_message)
+      form = self.get_form()
+      context = self.get_context_data(form=form)
+      return self.render_to_response(context)
+    form = self.get_form(data=request.POST, files=request.FILES)
+    if form.is_valid():
+      return self.form_valid(form)
+    return self.form_invalid(form)
   def form_valid(self, form):
     code = form.cleaned_data['code']
-    tag = Tag.objects.create(owner=self.request.user, code=code, name="New Tag", retailer=code.retailer)
+    tag = Tag.objects.create(owner=self.request.user, code=code, name="New Tag", retailer=code.retailer, batch=code.batch)
     Event.objects.create(tag=tag, tipo='Registered', details="", owner = tag.owner)
     client, created = Client.objects.get_or_create(user=self.request.user, retailer = tag.retailer)
     code.delete()
     messages.success(self.request, self.success_message)
     return HttpResponseRedirect(reverse('edit_tag', kwargs={'pk':tag.pk}))
+  def form_invalid(self, form):
+    user = self.request.user
+    user.tries_left -= 1
+    if user.tries_left < 1:
+      user.tries_left = 3
+      user.blocked_until = timezone.now() + timedelta(minutes=30)
+      messages.warning(self.request, self.blocked_message)
+    user.save()
+    context = self.get_context_data(form=form)
+    return self.render_to_response(context)
 
 class HowItWorks(MessageMixin, vanilla.TemplateView):
   template_name = 'tags/how_it_works.html'
@@ -474,38 +503,65 @@ class SMSRegister(Notifier, vanilla.FormView):
     self.data['code'] = data[0]
     if len(data) > 1: self.data['name'] = data[1]
     else: self.data['name'] = 'Unnamed Tag'
-    form = self.get_form(data={'code':self.data['code'], 'name':self.data['name'], 'user':self.caller_number})
+    # Check to see if he's been blocked
+    user=None
+    try: user = User.objects.get(phone = self.caller_number)
+    except:
+      try: user = PhoneNumber.objects.get(phone = self.caller_number)
+      except:pass
+    if user and user.blocked_until and user.blocked_until > timezone.now():
+      self.sendSMS(number = self.caller_number, template_id = 'too_many_attempts', context = {})
+      return self.render_to_response({})
+    form = self.get_form(data={'code':self.data['code'], 'name':self.data['name']})
     if form.is_valid(): return self.form_valid(form)
     return self.form_invalid(form)
+  def make_tag(self, user, code, name):
+    tag = Tag.objects.create(owner=user, code=code, name=name, retailer=code.retailer, batch=code.batch)
+    Event.objects.create(tag=tag, tipo='Registered', details="", owner = tag.owner)
+    client, created = Client.objects.get_or_create(user=user, retailer = tag.retailer)
+    code_str = code.code
+    code.delete()
+    return tag
   def form_valid(self, form):
     code = form.cleaned_data['code']
     name = form.cleaned_data['name']
-    user = form.cleaned_data['user']
-    
-    tag = Tag.objects.create(owner=user, code=code, name=name, retailer=code.retailer)
-    Event.objects.create(tag=tag, tipo='Registered', details="", owner = tag.owner)
-    client, created = Client.objects.get_or_create(user=user, retailer = tag.retailer)
-    print 'code:'
-    print type(code)
-    print code
-    code_str = code.code
-    code.delete()
-    self.object = tag
-    # The form will have a password in the cleaned data only if a new user was created
-    if 'pw' in form.cleaned_data: 
-      # pass
-      self.sendSMS(number = self.caller_number, template_id = 'registered_new', context = {'code':code.code, 'username':self.caller_number,'password':form.cleaned_data['pw']})  
-    else: 
+    pw=None
+    try: self.user = User.objects.get(phone = self.caller_number)
+    except User.DoesNotExist: 
+      pw=''.join(random.choice('0123456789') for i in range(5))
+      self.user = User.objects.create_user(
+        username = self.caller_number, 
+        password = pw, 
+        phone = self.caller_number,
+        first_name = self.caller_number,
+        force_change_password = True
+      )
+    self.object = self.make_tag(self.user, code, name)
+    if pw:
+      self.sendSMS(
+        number = self.caller_number, 
+        template_id = 'registered_new', 
+        context = {'code':code.code, 'username':self.caller_number,'password':pw}
+      )
+    else:
       self.sendSMS(number = self.caller_number, template_id = 'registered', context = {'code':code.code})
-      # print 'user.email: '+str(user.email)
-      if user.email and email_re.match(user.email):
-        self.sendEmail(to = user.email, subject = "YesTag Registered",
+      if self.user.email and email_re.match(self.user.email):
+        self.sendEmail(to = self.user.email, subject = "YesTag Registered",
           template = 'tags/tag_registered_phone_email.html', context = {
             'code':code.code
           })
-    return HttpResponseRedirect(reverse('edit_tag', kwargs={'pk':tag.pk}))
+    return HttpResponseRedirect(reverse('edit_tag', kwargs={'pk':self.object.pk}))
 
   def form_invalid(self, form):
+    try: self.phone_user = User.objects.get(phone = self.caller_number)
+    except User.DoesNotExist: 
+      self.phone_user, created = PhoneNumber.objects.get_or_create(phone = self.caller_number)
+    self.phone_user.tries_left -= 1
+    if self.phone_user.tries_left < 1:
+      self.phone_user.tries_left = 3
+      self.phone_user.blocked_until = timezone.now() + timedelta(minutes=30)
+    self.phone_user.save()
+
     self.sendSMS(number = self.caller_number, template_id = 'not_registered', context = {'code':self.data['code']})
     self.sendEmail(to = self.ADMIN_EMAIL, subject = "Attempt to Register invalid code",
       template = 'tags/tag_not_registered_admin_email.html', context = {
@@ -513,5 +569,6 @@ class SMSRegister(Notifier, vanilla.FormView):
         'code':self.data['code'],
         'number':self.data['number']
       })
+
     context = self.get_context_data(form=form)
     return self.render_to_response(context)

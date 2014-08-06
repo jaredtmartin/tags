@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from authentication.models import User
+from authentication.models import User, PhoneNumber
 
 
 class UserCreationForm(forms.ModelForm):
@@ -43,7 +43,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'first_name','last_name','street','city','state','phone', 'is_active', 'is_staff', 
+        fields = ['email', 'password', 'tries_left', 'blocked_until', 'first_name','last_name','street','city','state','phone', 'is_active', 'is_staff', 
         'nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
         'nominee_state', 'nominee_phone', 'nominee_phone2', 'is_retailer','force_change_password']
 
@@ -67,11 +67,12 @@ class UserAdmin(UserAdmin):
         'nominee_state', 'nominee_phone', 'nominee_phone2')
     list_filter = ('is_staff',)
     fieldsets = (
-        (None, {'fields': ('email', 'password','force_change_password')}),
+        (None, {'fields': ('email',)}),
         ('Personal info', {'fields': ('first_name','last_name','street','city','state','phone')}),
         ('Nominee', {'fields': ('nominee_first_name', 'nominee_last_name', 'nominee_email', 'nominee_email2', 'nominee_street', 'nominee_city', 
         'nominee_state', 'nominee_phone', 'nominee_phone2')}),
         ('Permissions', {'fields': ('is_staff','is_retailer')}),
+        ('Security', {'fields':('password', 'tries_left', 'blocked_until','force_change_password')})
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -87,6 +88,7 @@ class UserAdmin(UserAdmin):
 
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
+admin.site.register(PhoneNumber)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 # admin.site.unregister(Group)

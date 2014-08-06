@@ -53,21 +53,21 @@ class SMSFoundForm(forms.Form):
 class RegisterSMSCodeForm(forms.Form):
   code = forms.CharField()
   name = forms.CharField(required=False)
-  user = forms.CharField()
+  # user = forms.CharField()
   def clean_code(self):
     data = self.cleaned_data['code']
     try: return Code.objects.get(code=self.cleaned_data['code'])
     except Code.DoesNotExist: raise forms.ValidationError("This is not a valid code.")
     return data
-  def clean_user(self):
-    import random
-    data = self.cleaned_data['user']
-    try: return User.objects.get(phone=self.cleaned_data['user'])
-    except User.DoesNotExist: 
-      pw = ''.join(random.choice('0123456789') for i in range(5))
-      self.cleaned_data['pw'] = pw
-      return User.objects.create_user(self.cleaned_data['user'], password = pw, phone = self.cleaned_data['user'], first_name = self.cleaned_data['user'], force_change_password = True)
-    raise forms.ValidationError("Invalid User.")
+  # def clean_user(self):
+  #   import random
+  #   data = self.cleaned_data['user']
+  #   try: return User.objects.get(phone=self.cleaned_data['user'])
+  #   except User.DoesNotExist: 
+  #     pw = ''.join(random.choice('0123456789') for i in range(5))
+  #     self.cleaned_data['pw'] = pw
+  #     return User.objects.create_user(self.cleaned_data['user'], password = pw, phone = self.cleaned_data['user'], first_name = self.cleaned_data['user'], force_change_password = True)
+  #   raise forms.ValidationError("Invalid User.")
 
 
 

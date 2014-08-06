@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from django.core.urlresolvers import reverse_lazy
 from tags.views import Home
 from django.views.generic import RedirectView
-
+from tags.views import RegisterTag
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -16,6 +16,8 @@ urlpatterns = patterns('',
 		url(r'^admin/', include(admin.site.urls)),
     url(r'^tags/', include('tags.urls')),
     url(r'^auth/', include('authentication.urls')),
+
+    url(r'^register/$', RegisterTag.as_view(), name="register"),
     # url(r'^$', RedirectView.as_view(url=reverse_lazy('home'))),
 
 )
