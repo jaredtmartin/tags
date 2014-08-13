@@ -19,4 +19,7 @@ vnu Invalid 		Unnamed 				New					http://localhost:8000/tags/sms/register/?numbe
 VNu Valid, 			Named, 					New 				http://localhost:8000/tags/sms/register/?number=3333&message=DDDD Dog
 vNu Invalid 		Named 					New					http://localhost:8000/tags/sms/register/?number=4444&message=XXXX Grouch
 
+Now to test locking out:
+At this point user 1111 should have one more try
+This should get a normal rejection http://localhost:8000/tags/sms/register/?number=1111&message=XXXX
 
